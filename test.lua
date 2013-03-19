@@ -50,3 +50,28 @@ select("ul *")
 select("ul > *")
 select("body [class]")
 select("body > [class]")
+
+local sel, chapters = root:select("ol.chapters > li"), {}
+for i,v in ipairs(sel) do
+  table.insert(chapters, v:getcontent())
+end
+print("\nchapters")
+for i,v in ipairs(chapters) do
+  print(i, v)
+end
+
+local sel, contacts = root:select("ul.contacts > li"), {}
+for i,v in ipairs(sel) do
+  local c = {}
+  for fi,fv in ipairs(v:select("span[class]")) do
+    c[fv.classes[1]] = fv:getcontent()
+  end
+  contacts[v.id] = c
+end
+print("\ncontacts")
+for k,v in pairs(contacts) do
+  print(k)
+  for fk,fv in pairs(v) do
+    print(fk, fv)
+  end
+end
