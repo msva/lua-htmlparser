@@ -1,10 +1,10 @@
-local HtmlParser = require("HtmlParser")
+local htmlparser = require("htmlparser")
 
 local io = require("io")
 local file = io.input("./test.html")
 local text = io.read("*a") file:close()
 
-local root = HtmlParser.parse(text)
+local root = htmlparser.parse(text)
 
 -- print the tree
 local function p(n)
