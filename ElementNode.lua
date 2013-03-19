@@ -89,7 +89,7 @@ function ElementNode:close(closestart, closeend)
   end
 end
 
-function ElementNode:select(s)
+local function select(self, s)
   if not s or type(s) ~= "string" then return {} end
   local subjects = Set:new({self})
   local resultset
@@ -115,5 +115,8 @@ function ElementNode:select(s)
   end
   return resultset:tolist()
 end
+
+function ElementNode:select(s) return select(self, s) end
+ElementNode.mt.__call = select
 
 return ElementNode
