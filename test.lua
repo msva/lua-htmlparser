@@ -27,10 +27,10 @@ local function select( s )
   print ""
   print("->", s)
   local tags = root:select(s)
-  for i,t in ipairs(tags) do
+  for i,t in ipairs(tags.nodes) do
     print(t.name)
   end
-  print(# tags)
+  print(# tags.nodes)
 end
 select("*")
 select("link")
@@ -52,7 +52,7 @@ select("body [class]")
 select("body > [class]")
 
 local sel, chapters = root("ol.chapters > li"), {}
-for i,v in ipairs(sel) do
+for _,v in ipairs(sel.nodes) do
   table.insert(chapters, v:getcontent())
 end
 print("\nchapters")
@@ -60,13 +60,11 @@ for i,v in ipairs(chapters) do
   print(i, v)
 end
 
-local sel, contacts = root("ul.contacts > li"), {}
-for i,v in ipairs(sel) do
-  local c = {}
-  for fi,fv in ipairs(v("span[class]")) do
-    c[fv.classes[1]] = fv:getcontent()
-  end
-  contacts[v.id] = c
+local sel, contacts = root("ul.contacts > li")("span[class]"), {}
+for _,v in ipairs(sel.nodes) do
+  local id = v.parent.parent.id -- li > a > span
+  contacts[id] = contacts[id] or {}
+  contacts[id][v.classes[1]] = v:getcontent()
 end
 print("\ncontacts")
 for k,v in pairs(contacts) do
@@ -75,3 +73,6 @@ for k,v in pairs(contacts) do
     print(fk, fv)
   end
 end
+
+
+

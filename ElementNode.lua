@@ -17,7 +17,9 @@ function ElementNode:new(nameortext, node, descend, openstart, openend)
     deepernodes = Set:new(),
     deeperelements = {}, deeperattributes = {}, deeperids = {}, deeperclasses = {}
   }
-  if not node then
+  if nameortext == "container" then
+    instance.root = node
+  elseif not node then
     instance.name = "root"
     instance.root = instance
     instance._text = nameortext
@@ -60,9 +62,7 @@ function ElementNode:addattribute(k, v)
 end
 
 local function insert(list, name, node)
-  if not list[name] then
-    list[name] = Set:new()
-  end
+  list[name] = list[name] or Set:new()
   list[name]:add(node)
 end
 
@@ -113,7 +113,25 @@ local function select(self, s)
     subjects = Set:new(resultset)
     ::nextpart::
   end
-  return resultset:tolist()
+  -- construct a container node for the resultset, so that we can :select() on it
+  local ret = ElementNode:new("container", self)
+  for node in pairs(resultset) do
+    table.insert(ret.nodes, node)
+    ret.deepernodes = ret.deepernodes + node.deepernodes
+    for listname,list in pairs({
+      deeperelements = node.deeperelements,
+      deeperattributes = node.deeperattributes,
+      deeperids = node.deeperids,
+      deeperclasses = node.deeperclasses
+    }) do
+      local target = ret[listname]
+      for k,set in pairs(list) do
+        -- Set.__add will create an empty Set if not target[k]
+        target[k] = target[k] + set
+      end
+    end
+  end
+  return ret
 end
 
 function ElementNode:select(s) return select(self, s) end
