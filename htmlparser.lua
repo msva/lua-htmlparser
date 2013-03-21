@@ -16,14 +16,18 @@ local function parse(text)
 
     local tagst, apos = tag:gettext(), 1
     while true do
-      local start, k, quote, v
-      start, apos, k, quote = string.find(tagst, "%s+([^%s=]+)=(['\"]?)", apos)
+      local start, k, eq, quote, v
+      start, apos, k, eq, quote = string.find(tagst, "%s+([^%s=]+)(=?)(['\"]?)", apos)
       if not k then break end
-      local pattern = "=([^%s'\">]*)"
-      if quote ~= '' then
-        pattern = quote .. "([^" .. quote .. "]*)" .. quote
+      if eq == "" then
+        v = ""
+      else
+        local pattern = "=([^%s'\">]*)"
+        if quote ~= '' then
+          pattern = quote .. "([^" .. quote .. "]*)" .. quote
+        end
+        start, apos, v = string.find(tagst, pattern, apos)
       end
-      start, apos, v = string.find(tagst, pattern, apos)
       tag:addattribute(k, v)
     end
 
@@ -31,17 +35,16 @@ local function parse(text)
       descend = false
       tag:close()
     else
-      opentags[tag.name] = tag
+      opentags[tag.name] = opentags[tag.name] or {}
+      table.insert(opentags[tag.name], tag)
     end
 
     local closeend = tpos
     while true do
       local closestart, closing, closename
       closestart, closeend, closing, closename = string.find(root._text, "[^<]*<(/?)(%w+)", closeend)
-      closing = closing and closing ~= ''
-      if not closing then break end
-      tag = opentags[closename]
-      opentags[closename] = nil
+      if not closing or closing == "" then break end
+      tag = table.remove(opentags[closename])
       closestart = string.find(root._text, "<", closestart)
       tag:close(closestart, closeend + 1)
       node = tag.parent

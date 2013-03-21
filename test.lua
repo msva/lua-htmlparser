@@ -51,22 +51,24 @@ select("ul > *")
 select("body [class]")
 select("body > [class]")
 
+print("\nchapters")
 local sel, chapters = root("ol.chapters > li"), {}
 for _,v in ipairs(sel.nodes) do
   table.insert(chapters, v:getcontent())
 end
-print("\nchapters")
+-- print
 for i,v in ipairs(chapters) do
   print(i, v)
 end
 
+print("\ncontacts")
 local sel, contacts = root("ul.contacts > li")("span[class]"), {}
 for _,v in ipairs(sel.nodes) do
   local id = v.parent.parent.id -- li > a > span
   contacts[id] = contacts[id] or {}
   contacts[id][v.classes[1]] = v:getcontent()
 end
-print("\ncontacts")
+-- print
 for k,v in pairs(contacts) do
   print(k)
   for fk,fv in pairs(v) do
@@ -74,5 +76,41 @@ for k,v in pairs(contacts) do
   end
 end
 
-
-
+print("\nmicrodata")
+local sel, scopes = root("[itemprop]"), {}
+for _,prop in ipairs(sel.nodes) do
+  if prop.attributes["itemscope"] then goto nextprop end
+  local descendantscopes, scope = {}, prop
+  while true do
+    repeat
+      scope = scope.parent
+    until scope.attributes["itemscope"]
+    if not scope.attributes["itemprop"] then break end
+    table.insert(descendantscopes, 1, scope)
+  end
+  scopes[scope] = scopes[scope] or {}
+  local entry = scopes[scope]
+  for _,v in ipairs(descendantscopes) do
+    entry[v] = entry[v] or {}
+    entry = entry[v]
+  end
+  local k, v = prop.attributes["itemprop"], prop:getcontent()
+  entry[k] = v
+  ::nextprop::
+end
+-- print
+local function printscope(node, table, level)
+  level = level or 1
+  local scopeprop = node.attributes["itemprop"] or ""
+  print(string.rep("  ", level - 1) .. node.attributes["itemtype"], scopeprop)
+  for prop,v in pairs(table) do
+    if type(prop) == "table" then
+      printscope(prop, v, level + 1)
+    else
+      print(string.rep("  ", level) .. prop .. "=[" .. v .. "]")
+    end
+  end
+end
+for node,table in pairs(scopes) do
+  printscope(node, table)
+end
