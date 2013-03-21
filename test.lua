@@ -74,5 +74,21 @@ for k,v in pairs(contacts) do
   end
 end
 
+print("\nmicrodata")
+local sel, scopes = root("[itemscope]"), {}
+for i,v in ipairs(sel.nodes) do
+  local type = v.attributes["itemtype"]
+  if not v.attributes["itemprop"] then
+    scopes[type] = scopes[type] or {}
+    local item = {}
+      local sel = sel("[itemprop]")
+      for i,v in ipairs(sel.nodes) do
+        -- TODO
+        print("prop", v.attributes["itemprop"])
+      end
+    table.insert(scopes[type], item)
+  end
+end
+
 
 
