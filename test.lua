@@ -114,3 +114,13 @@ end
 for node,table in pairs(scopes) do
   printscope(node, table)
 end
+
+local sel = root("[itemscope]:not([itemprop])")
+for i,v in ipairs(sel.nodes) do
+  print(v.name)
+end
+
+local sel = root("[href]:not(a)")
+for i,v in ipairs(sel.nodes) do
+  print(v.name)
+end

@@ -103,12 +103,22 @@ local function select(self, s)
       resultset = resultset + init
     end
     if part == "*" then goto nextpart end
-    for t, w in string.gmatch(part, "([%[#%.]?)([^%[%]#%.]+)") do
-      if t == "" then resultset = resultset * self.deeperelements[w]
-      elseif t == "[" then resultset = resultset * self.deeperattributes[w]
-      elseif t == "#" then resultset = resultset * self.deeperids[w]
-      elseif t == "." then resultset = resultset * self.deeperclasses[w]
+    local match, filter
+    for t, w in string.gmatch(part, "([:%[#.]?)([^:%(%[#.%]%)]+)%]?%)?") do
+      -- TODO tidy up
+      if t == ":" then filter = w goto nextw end
+      if t == "" then match = self.deeperelements[w]
+      elseif t == "[" then match = self.deeperattributes[w]
+      elseif t == "#" then match = self.deeperids[w]
+      elseif t == "." then match = self.deeperclasses[w]
       end
+      if filter == "not" then
+        resultset = resultset - match
+      else
+        resultset = resultset * match
+      end
+      filter = nil
+      ::nextw::
     end
     subjects = Set:new(resultset)
     ::nextpart::
