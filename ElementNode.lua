@@ -107,7 +107,11 @@ local function select(self, s)
     end
     if part == "*" then goto nextpart end
     local excludes, filter = Set:new()
-    for t, w in string.gmatch(part, "([:%[#.]?)([^:%(%[#.%]%)]+)%]?%)?") do
+    for t, w in string.gmatch(part,
+      "([:%[#.]?)" ..        -- t = an optional :, [, #, or .
+      "([^:%(%[#.%]%)]+)" .. -- w = 1 or more of anything not :, (, [, #, ., ], or )
+      "%]?%)?"               -- followed by an uncaptured optional ] and/or )
+    ) do
       if t == ":" then filter = w goto nextw end
       local match = sets[t][w]
       if filter == "not" then
