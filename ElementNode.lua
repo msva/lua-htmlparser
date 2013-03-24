@@ -17,9 +17,7 @@ function ElementNode:new(nameortext, node, descend, openstart, openend)
     deepernodes = Set:new(),
     deeperelements = {}, deeperattributes = {}, deeperids = {}, deeperclasses = {}
   }
-  if nameortext == "container" then
-    instance.root = node
-  elseif not node then
+  if not node then
     instance.name = "root"
     instance.root = instance
     instance._text = nameortext
@@ -90,58 +88,41 @@ function ElementNode:close(closestart, closeend)
 end
 
 local function select(self, s)
-  if not s or type(s) ~= "string" then return {} end
-  local subjects = Set:new({self})
-  local resultset
-  local childrenonly
+  if not s or type(s) ~= "string" then return Set:new() end
+  local subjects, resultset, childrenonly = Set:new({self})
+  local sets = {
+    [""]  = self.deeperelements,
+    ["["] = self.deeperattributes,
+    ["#"] = self.deeperids,
+    ["."] = self.deeperclasses
+  }
   for part in string.gmatch(s, "%S+") do
     if part == ">" then childrenonly = true goto nextpart end
     resultset = Set:new()
     for subject in pairs(subjects) do
-      local init = subject.deepernodes
-      if childrenonly then init = Set:new(subject.nodes) childrenonly = false end
-      resultset = resultset + init
+      local star = subject.deepernodes
+      if childrenonly then star = Set:new(subject.nodes) end
+      childrenonly = false
+      resultset = resultset + star
     end
     if part == "*" then goto nextpart end
-    local match, filter
+    local excludes, filter = Set:new()
     for t, w in string.gmatch(part, "([:%[#.]?)([^:%(%[#.%]%)]+)%]?%)?") do
-      -- TODO tidy up
       if t == ":" then filter = w goto nextw end
-      if t == "" then match = self.deeperelements[w]
-      elseif t == "[" then match = self.deeperattributes[w]
-      elseif t == "#" then match = self.deeperids[w]
-      elseif t == "." then match = self.deeperclasses[w]
-      end
+      local match = sets[t][w]
       if filter == "not" then
-        resultset = resultset - match
+        excludes = excludes + match
       else
         resultset = resultset * match
       end
       filter = nil
       ::nextw::
     end
+    resultset = resultset - excludes
     subjects = Set:new(resultset)
     ::nextpart::
   end
-  -- construct a container node for the resultset, so that we can :select() on it
-  local ret = ElementNode:new("container", self)
-  for node in pairs(resultset) do
-    table.insert(ret.nodes, node)
-    ret.deepernodes = ret.deepernodes + node.deepernodes
-    for listname,list in pairs({
-      deeperelements = node.deeperelements,
-      deeperattributes = node.deeperattributes,
-      deeperids = node.deeperids,
-      deeperclasses = node.deeperclasses
-    }) do
-      local target = ret[listname]
-      for k,set in pairs(list) do
-        -- Set.__add will create an empty Set if not target[k]
-        target[k] = target[k] + set
-      end
-    end
-  end
-  return ret
+  return resultset
 end
 
 function ElementNode:select(s) return select(self, s) end

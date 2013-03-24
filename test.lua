@@ -26,11 +26,11 @@ p(root)
 local function select( s )
   print ""
   print("->", s)
-  local tags = root:select(s)
-  for i,t in ipairs(tags.nodes) do
-    print(t.name)
+  local sel = root:select(s)
+  for element in pairs(sel) do
+    print(element.name)
   end
-  print(# tags.nodes)
+  print(sel:len())
 end
 select("*")
 select("link")
@@ -53,8 +53,8 @@ select("body > [class]")
 
 print("\nchapters")
 local sel, chapters = root("ol.chapters > li"), {}
-for _,v in ipairs(sel.nodes) do
-  table.insert(chapters, v:getcontent())
+for e in pairs(sel) do
+  table.insert(chapters, e:getcontent())
 end
 -- print
 for i,v in ipairs(chapters) do
@@ -62,11 +62,11 @@ for i,v in ipairs(chapters) do
 end
 
 print("\ncontacts")
-local sel, contacts = root("ul.contacts > li")("span[class]"), {}
-for _,v in ipairs(sel.nodes) do
-  local id = v.parent.parent.id -- li > a > span
+local sel, contacts = root("ul.contacts span[class]"), {}
+for e in pairs(sel) do
+  local id = e.parent.parent.id -- li > a > span
   contacts[id] = contacts[id] or {}
-  contacts[id][v.classes[1]] = v:getcontent()
+  contacts[id][e.classes[1]] = e:getcontent()
 end
 -- print
 for k,v in pairs(contacts) do
@@ -78,7 +78,7 @@ end
 
 print("\nmicrodata")
 local sel, scopes = root("[itemprop]"), {}
-for _,prop in ipairs(sel.nodes) do
+for prop in pairs(sel) do
   if prop.attributes["itemscope"] then goto nextprop end
   local descendantscopes, scope = {}, prop
   while true do
@@ -115,12 +115,20 @@ for node,table in pairs(scopes) do
   printscope(node, table)
 end
 
-local sel = root("[itemscope]:not([itemprop])")
-for i,v in ipairs(sel.nodes) do
-  print(v.name)
+print("\nnot firstname")
+local sel = root(".contacts span:not(.firstname)")
+for e in pairs(sel) do
+  print(e.classes[1], e:getcontent())
 end
 
-local sel = root("[href]:not(a)")
-for i,v in ipairs(sel.nodes) do
-  print(v.name)
+print("\nnot a hrefs")
+local sel = root(":not(a)[href]")
+for e in pairs(sel) do
+  print(e.name, e.attributes["href"])
+end
+
+print("\ntop itemscopes")
+local sel = root("[itemscope]:not([itemprop])")
+for e in pairs(sel) do
+  print(e.name, e.attributes["itemtype"])
 end
