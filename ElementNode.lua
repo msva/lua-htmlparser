@@ -88,14 +88,14 @@ function ElementNode:close(closestart, closeend)
 end
 
 local function select(self, s)
-  if not s or type(s) ~= "string" then return Set:new() end
-  local subjects, resultset, childrenonly = Set:new({self})
+  if not s or type(s) ~= "string" or s == "" then return Set:new() end
   local sets = {
     [""]  = self.deeperelements,
     ["["] = self.deeperattributes,
     ["#"] = self.deeperids,
     ["."] = self.deeperclasses
   }
+  local subjects, resultset, childrenonly = Set:new({self})
   for part in string.gmatch(s, "%S+") do
     if part == ">" then childrenonly = true goto nextpart end
     resultset = Set:new()
@@ -107,13 +107,24 @@ local function select(self, s)
     end
     if part == "*" then goto nextpart end
     local excludes, filter = Set:new()
-    for t, w in string.gmatch(part,
+    for t, w, v in string.gmatch(part,
       "([:%[#.]?)" ..        -- t = an optional :, [, #, or .
       "([^:%(%[#.%]%)]+)" .. -- w = 1 or more of anything not :, (, [, #, ., ], or )
       "%]?%)?"               -- followed by an uncaptured optional ] and/or )
     ) do
       if t == ":" then filter = w goto nextw end
+      if t == "[" then
+        w, v = string.match(w, "([^=]+)=?(%S*)")
+      end
       local match = sets[t][w]
+      if v and v ~= "" then
+        v = string.sub(v, 2, #v - 1) -- strip quotes
+        for node in pairs(match) do
+          if node.attributes[w] ~= v then
+            match:remove(node)
+          end
+        end
+      end
       if filter == "not" then
         excludes = excludes + match
       else

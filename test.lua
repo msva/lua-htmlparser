@@ -51,6 +51,13 @@ select("ul > *")
 select("body [class]")
 select("body > [class]")
 
+select(".contacts span:not(.firstname)")
+select(":not(a)[href]")
+select("[itemscope]:not([itemprop])")
+
+select("link[rel='alternate']")
+select("[test2=\"val='2'\"]")
+
 print("\nchapters")
 local sel, chapters = root("ol.chapters > li"), {}
 for e in pairs(sel) do
@@ -113,22 +120,4 @@ local function printscope(node, table, level)
 end
 for node,table in pairs(scopes) do
   printscope(node, table)
-end
-
-print("\nnot firstname")
-local sel = root(".contacts span:not(.firstname)")
-for e in pairs(sel) do
-  print(e.classes[1], e:getcontent())
-end
-
-print("\nnot a hrefs")
-local sel = root(":not(a)[href]")
-for e in pairs(sel) do
-  print(e.name, e.attributes["href"])
-end
-
-print("\ntop itemscopes")
-local sel = root("[itemscope]:not([itemprop])")
-for e in pairs(sel) do
-  print(e.name, e.attributes["itemtype"])
 end
