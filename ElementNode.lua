@@ -89,12 +89,34 @@ end
 
 local function select(self, s)
   if not s or type(s) ~= "string" or s == "" then return Set:new() end
-  local sets = {
-    [""]  = self.deeperelements,
-    ["["] = self.deeperattributes,
-    ["#"] = self.deeperids,
-    ["."] = self.deeperclasses
-  }
+
+  local function match(t, w)
+    local sets = {
+      [""]  = self.deeperelements,
+      ["["] = self.deeperattributes,
+      ["#"] = self.deeperids,
+      ["."] = self.deeperclasses
+    }
+    local v
+    if t == "[" then
+      w, v = string.match(w, 
+        "([^=]+)" .. -- w = 1 or more characters up to a possible "="
+        "=?" ..      -- an optional uncaptured "="
+        "(.*)"      -- v = anything following the "=", or else ""
+      )
+    end
+    local matched = sets[t][w]
+    if v and v ~= "" then
+      v = string.sub(v, 2, #v - 1) -- strip quotes
+      for node in pairs(matched) do
+        if node.attributes[w] ~= v then
+          matched:remove(node)
+        end
+      end
+    end
+    return matched
+  end
+
   local subjects, resultset, childrenonly = Set:new({self})
   for part in string.gmatch(s, "%S+") do
     if part == ">" then childrenonly = true goto nextpart end
@@ -107,28 +129,17 @@ local function select(self, s)
     end
     if part == "*" then goto nextpart end
     local excludes, filter = Set:new()
-    for t, w, v in string.gmatch(part,
+    for t, w in string.gmatch(part,
       "([:%[#.]?)" ..        -- t = an optional :, [, #, or .
       "([^:%(%[#.%]%)]+)" .. -- w = 1 or more of anything not :, (, [, #, ., ], or )
       "%]?%)?"               -- followed by an uncaptured optional ] and/or )
     ) do
       if t == ":" then filter = w goto nextw end
-      if t == "[" then
-        w, v = string.match(w, "([^=]+)=?(%S*)")
-      end
-      local match = sets[t][w]
-      if v and v ~= "" then
-        v = string.sub(v, 2, #v - 1) -- strip quotes
-        for node in pairs(match) do
-          if node.attributes[w] ~= v then
-            match:remove(node)
-          end
-        end
-      end
+      local matched = match(t, w)
       if filter == "not" then
-        excludes = excludes + match
+        excludes = excludes + matched
       else
-        resultset = resultset * match
+        resultset = resultset * matched
       end
       filter = nil
       ::nextw::

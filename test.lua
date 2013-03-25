@@ -10,11 +10,8 @@ local root = htmlparser.parse(text)
 local function p(n)
   local space = string.rep("  ", n.level)
   local s = space .. n.name
-  for i,v in ipairs(n.nodes) do
-    s = s .. " nodes[" .. i .. "]=" .. v.name
-  end
   for k,v in pairs(n.attributes) do
-    s = s .. " " .. k .. "=[" .. v .. "]"
+    s = s .. " " .. k .. "=[[" .. v .. "]]"
   end
   print(s)
   for i,v in ipairs(n.nodes) do
@@ -57,6 +54,11 @@ select("[itemscope]:not([itemprop])")
 
 select("link[rel='alternate']")
 select("[test2=\"val='2'\"]")
+select("[test5='val5']")
+select("[test6='val\"\"6']")
+select("[itemscope='']")
+select("[itemscope=]")
+select("[itemscope]")
 
 print("\nchapters")
 local sel, chapters = root("ol.chapters > li"), {}
