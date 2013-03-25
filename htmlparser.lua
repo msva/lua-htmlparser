@@ -9,7 +9,11 @@ local function parse(text)
   local node, descend, tpos, opentags = root, true, 1, {}
   while true do
     local openstart, name
-    openstart, tpos, name = string.find(root._text, "<(%w+)[^>]*>", tpos)
+    openstart, tpos, name = string.find(root._text, 
+      "<" ..     -- an uncaptured starting "<"
+      "(%w+)" .. -- name = the first word, directly following the "<"
+      "[^>]*>",  -- include, but not capture everything up to the next ">"
+    tpos)
     if not name then break end
     local tag = ElementNode:new(name, node, descend, openstart, tpos)
     node = tag
@@ -17,12 +21,17 @@ local function parse(text)
     local tagst, apos = tag:gettext(), 1
     while true do
       local start, k, eq, quote, v
-      start, apos, k, eq, quote = string.find(tagst, "%s+([^%s=]+)(=?)(['\"]?)", apos)
-      if not k then break end
+      start, apos, k, eq, quote = string.find(tagst, 
+        "%s+" ..       -- some uncaptured space
+        "([^%s=]+)" .. -- k = an unspaced string up to an optional "="
+        "(=?)" ..      -- eq = the optiona; "=", else ""
+        "(['\"]?)",    -- quote = an optional "'" or '"' following the "=", or ""
+      apos)
+      if not k or k == "/>" then break end
       if eq == "" then
         v = ""
       else
-        local pattern = "=([^%s'\">]*)"
+        local pattern = "=([^%s>]*)"
         if quote ~= '' then
           pattern = quote .. "([^" .. quote .. "]*)" .. quote
         end

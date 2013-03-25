@@ -10,11 +10,8 @@ local root = htmlparser.parse(text)
 local function p(n)
   local space = string.rep("  ", n.level)
   local s = space .. n.name
-  for i,v in ipairs(n.nodes) do
-    s = s .. " nodes[" .. i .. "]=" .. v.name
-  end
   for k,v in pairs(n.attributes) do
-    s = s .. " " .. k .. "=[" .. v .. "]"
+    s = s .. " " .. k .. "=[[" .. v .. "]]"
   end
   print(s)
   for i,v in ipairs(n.nodes) do
@@ -26,11 +23,11 @@ p(root)
 local function select( s )
   print ""
   print("->", s)
-  local tags = root:select(s)
-  for i,t in ipairs(tags.nodes) do
-    print(t.name)
+  local sel = root:select(s)
+  for element in pairs(sel) do
+    print(element.name)
   end
-  print(# tags.nodes)
+  print(sel:len())
 end
 select("*")
 select("link")
@@ -51,10 +48,22 @@ select("ul > *")
 select("body [class]")
 select("body > [class]")
 
+select(".contacts span:not(.firstname)")
+select(":not(a)[href]")
+select("[itemscope]:not([itemprop])")
+
+select("link[rel='alternate']")
+select("[test2=\"val='2'\"]")
+select("[test5='val5']")
+select("[test6='val\"\"6']")
+select("[itemscope='']")
+select("[itemscope=]")
+select("[itemscope]")
+
 print("\nchapters")
 local sel, chapters = root("ol.chapters > li"), {}
-for _,v in ipairs(sel.nodes) do
-  table.insert(chapters, v:getcontent())
+for e in pairs(sel) do
+  table.insert(chapters, e:getcontent())
 end
 -- print
 for i,v in ipairs(chapters) do
@@ -62,11 +71,11 @@ for i,v in ipairs(chapters) do
 end
 
 print("\ncontacts")
-local sel, contacts = root("ul.contacts > li")("span[class]"), {}
-for _,v in ipairs(sel.nodes) do
-  local id = v.parent.parent.id -- li > a > span
+local sel, contacts = root("ul.contacts span[class]"), {}
+for e in pairs(sel) do
+  local id = e.parent.parent.id -- li > a > span
   contacts[id] = contacts[id] or {}
-  contacts[id][v.classes[1]] = v:getcontent()
+  contacts[id][e.classes[1]] = e:getcontent()
 end
 -- print
 for k,v in pairs(contacts) do
@@ -78,7 +87,7 @@ end
 
 print("\nmicrodata")
 local sel, scopes = root("[itemprop]"), {}
-for _,prop in ipairs(sel.nodes) do
+for prop in pairs(sel) do
   if prop.attributes["itemscope"] then goto nextprop end
   local descendantscopes, scope = {}, prop
   while true do
