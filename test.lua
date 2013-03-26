@@ -60,6 +60,17 @@ select("[itemscope='']")
 select("[itemscope=]")
 select("[itemscope]")
 
+select("[itemscope][itemprop='address']")
+select("[itemscope][itemprop!='address']")
+select("[itemscope][itemprop!='adres']")
+select("[itemscope][itemprop!='']")
+select("[hreflang|='en']")
+select("[itemprop*='address']")
+select("[words~='two']")
+select("[words~='three']")
+select("[itemprop$='ion']")
+select("[hreflang^='en']")
+
 print("\nchapters")
 local sel, chapters = root("ol.chapters > li"), {}
 for e in pairs(sel) do
