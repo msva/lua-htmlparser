@@ -87,33 +87,57 @@ function ElementNode:close(closestart, closeend)
   end
 end
 
+local function escape(s)
+  local replace = {
+    ["^"] = "%^", ["$"] = "%$", ["("] = "%(", [")"] = "%)", ["%"] = "%%", ["."] = "%.",
+    ["["] = "%[", ["]"] = "%]", ["*"] = "%*", ["+"] = "%+", ["-"] = "%-", ["?"] = "%?"
+  }
+  local res = ""
+  for c in string.gmatch(s, ".") do
+    res = res .. (replace[c] or c)
+  end
+  return res
+end
+
 local function select(self, s)
   if not s or type(s) ~= "string" or s == "" then return Set:new() end
-
+  local sets = {[""]  = self.deeperelements, ["["] = self.deeperattributes,
+                ["#"] = self.deeperids,      ["."] = self.deeperclasses}
   local function match(t, w)
-    local sets = {
-      [""]  = self.deeperelements,
-      ["["] = self.deeperattributes,
-      ["#"] = self.deeperids,
-      ["."] = self.deeperclasses
-    }
-    local v
-    if t == "[" then
-      w, v = string.match(w, 
-        "([^=]+)" .. -- w = 1 or more characters up to a possible "="
-        "=?" ..      -- an optional uncaptured "="
-        "(.*)"      -- v = anything following the "=", or else ""
+    local m, v
+    if t == "[" then w, m, v = string.match(w, 
+        "([^=|%*~%$!%^]+)" .. -- w = 1 or more characters up to a possible "=", "|", "*", "~", "$", "!", or "^"
+        "([|%*~%$!%^]?)" ..   -- m = an optional "|", "*", "~", "$", "!", or "^", preceding the optional "="
+        "=?" ..               -- an optional uncaptured "="
+        "(.*)"                -- v = anything following the "=", or else ""
       )
     end
-    local matched = sets[t][w]
+    local matched = Set:new(sets[t][w])
+    -- attribute value selectors
     if v and v ~= "" then
       v = string.sub(v, 2, #v - 1) -- strip quotes
       for node in pairs(matched) do
-        if node.attributes[w] ~= v then
-          matched:remove(node)
+        local a = node.attributes[w]
+        -- equals
+        if m == "" and a ~= v then matched:remove(node)
+        -- not equals
+        elseif m == "!" and a == v then matched:remove(node)
+        -- prefix
+        elseif m =="|" and string.match(a, "^[^-]*") ~= v then matched:remove(node)
+        -- contains
+        elseif m =="*" and string.match(a, escape(v)) ~= v then matched:remove(node)
+        -- word
+        elseif m =="~" then matched:remove(node)
+          for word in string.gmatch(a, "%S+") do
+            if word == v then matched:add(node) break end
+          end
+        -- starts with
+        elseif m =="^" and string.match(a, "^" .. escape(v)) ~= v then matched:remove(node)
+        -- ends with
+        elseif m =="$" and string.match(a, escape(v) .. "$") ~= v then matched:remove(node)
         end
-      end
-    end
+      end -- for node
+    end -- if v
     return matched
   end
 
@@ -123,8 +147,7 @@ local function select(self, s)
     resultset = Set:new()
     for subject in pairs(subjects) do
       local star = subject.deepernodes
-      if childrenonly then star = Set:new(subject.nodes) end
-      childrenonly = false
+      if childrenonly then star = Set:new(subject.nodes) childrenonly = false end
       resultset = resultset + star
     end
     if part == "*" then goto nextpart end
