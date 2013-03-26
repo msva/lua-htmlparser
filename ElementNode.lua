@@ -88,15 +88,8 @@ function ElementNode:close(closestart, closeend)
 end
 
 local function escape(s)
-  local replace = {
-    ["^"] = "%^", ["$"] = "%$", ["("] = "%(", [")"] = "%)", ["%"] = "%%", ["."] = "%.",
-    ["["] = "%[", ["]"] = "%]", ["*"] = "%*", ["+"] = "%+", ["-"] = "%-", ["?"] = "%?"
-  }
-  local res = ""
-  for c in string.gmatch(s, ".") do
-    res = res .. (replace[c] or c)
-  end
-  return res
+  -- escape all ^, $, (, ), %, ., [, ], *, +, - , and ? with a % prefix
+  return string.gsub(s, "([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%" .. "%1")
 end
 
 local function select(self, s)
