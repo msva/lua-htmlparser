@@ -59,9 +59,9 @@ function ElementNode:addattribute(k, v)
   end
 end
 
-local function insert(list, name, node)
-  list[name] = list[name] or Set:new()
-  list[name]:add(node)
+local function insert(table, name, node)
+  table[name] = table[name] or Set:new()
+  table[name]:add(node)
 end
 
 function ElementNode:close(closestart, closeend)
