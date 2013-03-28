@@ -8,6 +8,12 @@ Parse HTML text into a tree of elements with selectors
 ##License
 MIT; see `./doc/LICENSE`
 
+##Install
+Htmlparser is a listed [LuaRock](http://luarocks.org/repositories/rocks/). Install using [LuaRocks](http://www.luarocks.org/): `luarocks install htmlparser`
+
+###Dependencies
+Htmlparser depends on [Lua 5.2](http://www.lua.org/download.html), and on the ["set"][1] LuaRock, which is installed along automatically
+
 ##Usage
 Start off with
 ```lua
