@@ -51,11 +51,11 @@ end
 - `"ancestor descendant"`
 - `"parent > child"`
 
-Selectors can be combined; e.g. ".class:not([attribute]) element.class"
+Selectors can be combined; e.g. `".class:not([attribute]) element.class"`
 
 ####Limitations
-- Attribute values in selectors currently cannot contain any spaces, since space is interpreted as a delimiter between ancestor and descendant, parent and >, or > and child parts of the selector
-- Likewise, for the parent > child relation, the spaces before and after the > are mandatory
+- Attribute values in selectors currently cannot contain any spaces, since space is interpreted as a delimiter between `ancestor` and `descendant`, `parent` and `>`, or `>` and `child` parts of the selector
+- Likewise, for the `parent > child` relation, the spaces before and after the `>` are mandatory
 
 ###Element type
 All tree elements provide, apart from `:select` and `()`, the following accessors:
