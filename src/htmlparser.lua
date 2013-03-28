@@ -1,5 +1,5 @@
-local ElementNode = require("ElementNode")
-local voidelements = require("voidelements")
+local ElementNode = require("htmlparser.ElementNode")
+local voidelements = require("htmlparser.voidelements")
 
 local HtmlParser = {}
 
