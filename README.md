@@ -36,20 +36,21 @@ end
 ```
 
 ###Selectors
-- "element"
-- "#id"
-- ".class"
-- "[attribute]"
-- "[attribute=value]"
-- "[attribute!=value]"
-- "[attribute|=value]"
-- "[attribute*=value]"
-- "[attribute~=value]"
-- "[attribute^=value]"
-- "[attribute$=value]"
-- ":not(selector)"
-- "ancestor descendant"
-- "parent > child"
+- `"element"`
+- `"#id"`
+- `".class"`
+- `"[attribute]"`
+- `"[attribute=value]"`
+- `"[attribute!=value]"`
+- `"[attribute|=value]"`
+- `"[attribute*=value]"`
+- `"[attribute~=value]"`
+- `"[attribute^=value]"`
+- `"[attribute$=value]"`
+- `":not(selector)"`
+- `"ancestor descendant"`
+- `"parent > child"`
+
 Selectors can be combined; e.g. ".class:not([attribute]) element.class"
 
 ####Limitations
@@ -57,19 +58,19 @@ Selectors can be combined; e.g. ".class:not([attribute]) element.class"
 - Likewise, for the parent > child relation, the spaces before and after the > are mandatory
 
 ###Element type
-The tree elements provide, apart from :select and (), the following accessors:
-- .name = the elements tagname
-- .attributes = a table with keys and values for the element's attributes
-- .id = the value of the element's id attribute, if present
-- .classes = an array with the classes listed in element's class attribute, if any
-- :getcontent() = the raw text between the opening and closing tags of the element
-- .nodes = an array with the element's child elements
-- .parent = the elements that contains this element; root.parent is nil
-- :gettext() = the raw text of the complete element, starting with `"<tagname"` and ending with `"/>"`
-- .level = how deep the element is in the tree; root level is 0
-- .root the root element of the tree; root.root is root
-- .deepernodes = a Set containing all elements in the tree beneath this element, including this element's .nodes
-- .deeperelements = a table with a key for each distinct tagname in .deepernodes, containing a Set of all deeper element nodes with that name
-- .deeperattributes = as .deeperelements, but keyed on attribute name
-- .deeperids = as .deeperelements, but keyed on id value
-- .deeperclasses = as .deeperelements, but keyed on class name
+All tree elements provide, apart from `:select` and `()`, the following accessors:
+- `.name` = the element's tagname
+- `.attributes` = a table with keys and values for the element's attributes; `{}` if none
+- `.id` = the value of the element's id attribute; `nil` if not present
+- `.classes` = an array with the classes listed in element's class attribute; `{}` if none
+- `:getcontent()` = the raw text between the opening and closing tags of the element; `""` if none
+- `.nodes` = an array with the element's child elements, `{}` if none
+- `.parent` = the elements that contains this element; `root.parent` is `nil`
+- `:gettext()` = the raw text of the complete element, starting with `"<tagname"` and ending with `"/>"`
+- `.level` = how deep the element is in the tree; root level is `0`
+- `.root` the root element of the tree; `root.root` is `root`
+- `.deepernodes` = a Set containing all elements in the tree beneath this element, including this element's `.nodes`; `{}` if none
+- `.deeperelements` = a table with a key for each distinct tagname in `.deepernodes`, containing a Set of all deeper element nodes with that name; `{}` in none
+- `.deeperattributes` = as `.deeperelements`, but keyed on attribute name
+- `.deeperids` = as `.deeperelements`, but keyed on id value
+- `.deeperclasses` = as `.deeperelements`, but keyed on class name
