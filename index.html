@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="LuaRock &quot;htmlparser&quot; : Parse HTML text into a tree of elements with selectors" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>LuaRock &quot;htmlparser&quot;</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/wscherphof/lua-htmlparser">View on GitHub</a>
+
+          <h1 id="project_title">LuaRock &quot;htmlparser&quot;</h1>
+          <h2 id="project_tagline">Parse HTML text into a tree of elements with selectors</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/wscherphof/lua-htmlparser/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/wscherphof/lua-htmlparser/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>License</h2>
+
+<p>MIT; see <code>./doc/LICENSE</code></p>
+
+<h2>Usage</h2>
+
+<p>Start off with</p>
+
+<div class="highlight"><pre><span class="nb">require</span><span class="p">(</span><span class="s2">"</span><span class="s">luarocks.loader"</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">htmlparser</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">"</span><span class="s">htmlparser"</span><span class="p">)</span>
+</pre></div>
+
+<p>Then, parse some html:</p>
+
+<div class="highlight"><pre><span class="kd">local</span> <span class="n">root</span> <span class="o">=</span> <span class="n">htmlparser</span><span class="p">.</span><span class="n">parse</span><span class="p">(</span><span class="n">htmlstring</span><span class="p">)</span>
+</pre></div>
+
+<p>The input to parse may be the contents of a complete html document, or any valid html snippet, as long as all tags are correctly opened and closed.
+Now, find sepcific contained elements by selecting:</p>
+
+<div class="highlight"><pre><span class="kd">local</span> <span class="n">elements</span> <span class="o">=</span> <span class="n">root</span><span class="p">:</span><span class="nb">select</span><span class="p">(</span><span class="n">selectorstring</span><span class="p">)</span>
+</pre></div>
+
+<p>Or in shorthand:</p>
+
+<div class="highlight"><pre><span class="kd">local</span> <span class="n">elements</span> <span class="o">=</span> <span class="n">root</span><span class="p">(</span><span class="n">selectorstring</span><span class="p">)</span>
+</pre></div>
+
+<p>This wil return a <a href="http://wscherphof.github.com/lua-set/">Set</a> of elements, all of which are of the same type as the root element, and thus support selecting as well, if ever needed:</p>
+
+<div class="highlight"><pre><span class="k">for</span> <span class="n">e</span> <span class="k">in</span> <span class="nb">pairs</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="k">do</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">subs</span> <span class="o">=</span> <span class="n">e</span><span class="p">(</span><span class="n">subselectorstring</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">sub</span> <span class="k">in</span> <span class="nb">pairs</span><span class="p">(</span><span class="n">subs</span><span class="p">)</span> <span class="k">do</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="s">"</span><span class="p">,</span> <span class="n">sub</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>The root element is a container for the top level elements in the parsed text, i.e. the <code>&lt;html&gt;</code> element in a parsed html document would be a child of the returned root element.</p>
+
+<h2>Selectors</h2>
+
+<p>Supported selectors are a subset of <a href="http://api.jquery.com/category/selectors/">jQuery's selectors</a>:</p>
+
+<ul>
+<li>
+<code>"*"</code> all contained elements</li>
+<li>
+<code>"element"</code> elements with the given tagname</li>
+<li>
+<code>"#id"</code> elements with the given id attribute value</li>
+<li>
+<code>".class"</code> elements with the given classname in the class attribute</li>
+<li>
+<code>"[attribute]"</code> elements with an attribute of the given name</li>
+<li>
+<code>"[attribute='value']"</code> equals: elements with the given value for the attribute with the given name</li>
+<li>
+<code>"[attribute!='value']"</code> not equals: elements without an attribute of the given name, or with that attribute, but with a value that is different from the given value</li>
+<li>
+<code>"[attribute|='value']"</code> prefix: attribute's value is given value, or starts with given value, followed by a hyphen (<code>-</code>)</li>
+<li>
+<code>"[attribute*='value']"</code> contains: attribute's value contains given value</li>
+<li>
+<code>"[attribute~='value']"</code> word: attribute's value is a space-separated token, where one of the tokens is the given value</li>
+<li>
+<code>"[attribute^='value']"</code> starts with: attribute's value starts with given value</li>
+<li>
+<code>"[attribute$='value']"</code> ends with: attribute's value ends with given value</li>
+<li>
+<code>":not(selectorstring)"</code> elements not selected by given selector string</li>
+<li>
+<code>"ancestor descendant"</code> elements selected by the <code>descendant</code> selector string, that are a descendant of any element selected by the <code>ancestor</code> selector string</li>
+<li>
+<code>"parent &gt; child"</code> elements selected by the <code>child</code> selector string, that are a child element of any element selected by the <code>parent</code> selector string</li>
+</ul><p>Selectors can be combined; e.g. <code>".class:not([attribute]) element.class"</code></p>
+
+<h3>Limitations</h3>
+
+<ul>
+<li>Attribute values in selectors currently cannot contain any spaces, since space is interpreted as a delimiter between the <code>ancestor</code> and <code>descendant</code>, <code>parent</code> and <code>&gt;</code>, or <code>&gt;</code> and <code>child</code> parts of the selector</li>
+<li>Likewise, for the <code>parent &gt; child</code> relation, the spaces before and after the <code>&gt;</code> are mandatory</li>
+<li>
+<code>&lt;!</code> elements are not parsed, including doctype and comments</li>
+<li>Textnodes are not seperate entries in the tree, so the content of <code>&lt;p&gt;line1&lt;br /&gt;line2&lt;/p&gt;</code> is plainly <code>"line1&lt;br /&gt;line2"</code>
+</li>
+</ul><h2>Examples</h2>
+
+<p>See <code>./doc/samples.lua</code></p>
+
+<h2>Element type</h2>
+
+<p>All tree elements provide, apart from <code>:select</code> and <code>()</code>, the following accessors:</p>
+
+<h3>Basic</h3>
+
+<ul>
+<li>
+<code>.name</code> the element's tagname</li>
+<li>
+<code>.attributes</code> a table with keys and values for the element's attributes; <code>{}</code> if none</li>
+<li>
+<code>.id</code> the value of the element's id attribute; <code>nil</code> if not present</li>
+<li>
+<code>.classes</code> an array with the classes listed in element's class attribute; <code>{}</code> if none</li>
+<li>
+<code>:getcontent()</code> the raw text between the opening and closing tags of the element; <code>""</code> if none</li>
+<li>
+<code>.nodes</code> an array with the element's child elements, <code>{}</code> if none</li>
+<li>
+<code>.parent</code> the elements that contains this element; <code>root.parent</code> is <code>nil</code>
+</li>
+</ul><h3>Other</h3>
+
+<ul>
+<li>
+<code>:gettext()</code> the raw text of the complete element, starting with <code>"&lt;tagname"</code> and ending with <code>"/&gt;"</code>
+</li>
+<li>
+<code>.level</code> how deep the element is in the tree; root level is <code>0</code>
+</li>
+<li>
+<code>.root</code> the root element of the tree; <code>root.root</code> is <code>root</code>
+</li>
+<li>
+<code>.deepernodes</code> a <a href="http://wscherphof.github.com/lua-set/">Set</a> containing all elements in the tree beneath this element, including this element's <code>.nodes</code>; <code>{}</code> if none</li>
+<li>
+<code>.deeperelements</code> a table with a key for each distinct tagname in <code>.deepernodes</code>, containing a <a href="http://wscherphof.github.com/lua-set/">Set</a> of all deeper element nodes with that name; <code>{}</code> in none</li>
+<li>
+<code>.deeperattributes</code> as <code>.deeperelements</code>, but keyed on attribute name</li>
+<li>
+<code>.deeperids</code> as <code>.deeperelements</code>, but keyed on id value</li>
+<li>
+<code>.deeperclasses</code> as <code>.deeperelements</code>, but keyed on class name</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">LuaRock &quot;htmlparser&quot; maintained by <a href="https://github.com/wscherphof">wscherphof</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
