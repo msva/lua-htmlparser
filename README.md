@@ -2,10 +2,10 @@
 
 Parse HTML text into a tree of elements with selectors
 
-###License
+##License
 MIT; see ./doc/LICENSE
 
-###Usage
+##Usage
 Start off with
 ```lua
 require("luarocks.loader")
@@ -35,7 +35,7 @@ for e in pairs(elements) do
 end
 ```
 
-###Selectors
+##Selectors
 - `"element"`
 - `"#id"`
 - `".class"`
@@ -53,11 +53,11 @@ end
 
 Selectors can be combined; e.g. `".class:not([attribute]) element.class"`
 
-####Limitations
-- Attribute values in selectors currently cannot contain any spaces, since space is interpreted as a delimiter between `ancestor` and `descendant`, `parent` and `>`, or `>` and `child` parts of the selector
+###Limitations
+- Attribute values in selectors currently cannot contain any spaces, since space is interpreted as a delimiter between the `ancestor` and `descendant`, `parent` and `>`, or `>` and `child` parts of the selector
 - Likewise, for the `parent > child` relation, the spaces before and after the `>` are mandatory
 
-###Element type
+##Element type
 All tree elements provide, apart from `:select` and `()`, the following accessors:
 - `.name` = the element's tagname
 - `.attributes` = a table with keys and values for the element's attributes; `{}` if none
