@@ -54,9 +54,9 @@ Supported selectors are a subset of [jQuery's selectors][2]:
 - `"[attribute~='value']"` word: attribute's value is a space-separated token, where one of the tokens is the given value
 - `"[attribute^='value']"` starts with: attribute's value starts with given value
 - `"[attribute$='value']"` ends with: attribute's value ends with given value
-- `":not(selector)"`
-- `"ancestor descendant"`
-- `"parent > child"`
+- `":not(selectorstring)"` elements not selected by given selector string
+- `"ancestor descendant"` elements selected by the `descendant` selector string, that are descendants of any element selected by the `ancestor` selector string
+- `"parent > child"` elements selected by the `child` selector string, that are a child of any element selected by the `parent` selector string
 
 Selectors can be combined; e.g. `".class:not([attribute]) element.class"`
 
