@@ -1,8 +1,9 @@
 # LuaRocks #
 ######################
+bin/
 lib/
 share/
-bin/
+*.rock
 
 # OS generated files #
 ######################
