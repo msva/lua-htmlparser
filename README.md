@@ -3,7 +3,7 @@
 Parse HTML text into a tree of elements with selectors
 
 ##License
-MIT; see ./doc/LICENSE
+MIT; see `./doc/LICENSE`
 
 ##Usage
 Start off with
@@ -57,8 +57,13 @@ Selectors can be combined; e.g. `".class:not([attribute]) element.class"`
 - Attribute values in selectors currently cannot contain any spaces, since space is interpreted as a delimiter between the `ancestor` and `descendant`, `parent` and `>`, or `>` and `child` parts of the selector
 - Likewise, for the `parent > child` relation, the spaces before and after the `>` are mandatory
 
+##Examples
+See `.doc/smples.lua`
+
 ##Element type
 All tree elements provide, apart from `:select` and `()`, the following accessors:
+
+###Basic
 - `.name` = the element's tagname
 - `.attributes` = a table with keys and values for the element's attributes; `{}` if none
 - `.id` = the value of the element's id attribute; `nil` if not present
@@ -66,6 +71,8 @@ All tree elements provide, apart from `:select` and `()`, the following accessor
 - `:getcontent()` = the raw text between the opening and closing tags of the element; `""` if none
 - `.nodes` = an array with the element's child elements, `{}` if none
 - `.parent` = the elements that contains this element; `root.parent` is `nil`
+
+###Other
 - `:gettext()` = the raw text of the complete element, starting with `"<tagname"` and ending with `"/>"`
 - `.level` = how deep the element is in the tree; root level is `0`
 - `.root` the root element of the tree; `root.root` is `root`
