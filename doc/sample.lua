@@ -1,7 +1,10 @@
+require("luarocks.loader")
+-- Omit next line in actual module clients; it's only to support development of the module itself
+package.path = "../src/?.lua;" .. package.path
 local htmlparser = require("htmlparser")
 
 local io = require("io")
-local file = io.input("./test.html")
+local file = io.input("./sample.html")
 local text = io.read("*a") file:close()
 
 local root = htmlparser.parse(text)
@@ -29,6 +32,7 @@ local function select( s )
   end
   print(sel:len())
 end
+
 select("*")
 select("link")
 select("#/contacts/4711")

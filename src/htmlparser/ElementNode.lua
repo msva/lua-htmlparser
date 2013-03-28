@@ -1,4 +1,5 @@
-local Set = require "Set"
+require("luarocks.loader")
+local Set = require("Set")
 
 local ElementNode = {}
 ElementNode.mt = {__index = ElementNode}
