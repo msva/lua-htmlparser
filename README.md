@@ -58,7 +58,7 @@ Selectors can be combined; e.g. `".class:not([attribute]) element.class"`
 - Likewise, for the `parent > child` relation, the spaces before and after the `>` are mandatory
 
 ##Examples
-See `.doc/smples.lua`
+See `./doc/samples.lua`
 
 ##Element type
 All tree elements provide, apart from `:select` and `()`, the following accessors:
