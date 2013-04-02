@@ -141,9 +141,10 @@ local function select(self, s)
     resultset = Set:new()
     for subject in pairs(subjects) do
       local star = subject.deepernodes
-      if childrenonly then star = Set:new(subject.nodes) childrenonly = false end
+      if childrenonly then star = Set:new(subject.nodes) end
       resultset = resultset + star
     end
+    childrenonly = false
     if part == "*" then goto nextpart end
     local excludes, filter = Set:new()
     for t, w in string.gmatch(part,
