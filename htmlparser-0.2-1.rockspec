@@ -1,8 +1,8 @@
 package = "htmlparser"
-version = "0.1-1"
+version = "0.2-1"
 source = {
   url = "git://github.com/wscherphof/lua-htmlparser.git",
-  branch = "v0.1"
+  branch = "v0.2"
 }
 description = {
   summary = "Parse HTML text into a tree of elements with selectors",
@@ -19,6 +19,7 @@ dependencies = {
 }
 build = {
   type = "builtin",
+  copy_directories = {"doc", "tst"},
   modules = {
     htmlparser = "src/htmlparser.lua",
     ["htmlparser.ElementNode"] = "src/htmlparser/ElementNode.lua",
