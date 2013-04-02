@@ -27,7 +27,7 @@ local function parse(text)
         "(=?)" ..      -- eq = the optional; "=", else ""
         "(['\"]?)",    -- quote = an optional "'" or '"' following the "=", or ""
       apos)
-      if not k or k == "/>" then break end
+      if not k or k == "/>" or k == ">" then break end
       if eq == "" then
         v = ""
       else
