@@ -123,9 +123,10 @@ Now, find sepcific contained elements by selecting:</p>
 <li>Attribute values in selectors currently cannot contain any spaces, since space is interpreted as a delimiter between the <code>ancestor</code> and <code>descendant</code>, <code>parent</code> and <code>&gt;</code>, or <code>&gt;</code> and <code>child</code> parts of the selector</li>
 <li>Likewise, for the <code>parent &gt; child</code> relation, the spaces before and after the <code>&gt;</code> are mandatory</li>
 <li>
-<code>&lt;!</code> elements are not parsed, including doctype and comments</li>
+<code>&lt;!</code> elements are not parsed, including doctype, comments, and CDATA</li>
 <li>Textnodes are not seperate entries in the tree, so the content of <code>&lt;p&gt;line1&lt;br /&gt;line2&lt;/p&gt;</code> is plainly <code>"line1&lt;br /&gt;line2"</code>
 </li>
+<li>All start and end tags should be explicitly specified in the text to be parsed; omitted tags (as <a href="http://www.w3.org/TR/html5/syntax.html#optional-tags">permitted</a> by the the HTML spec) are NOT implied. Only the <a href="http://www.w3.org/TR/html5/syntax.html#void-elements">void</a> elements naturally don't need an end tag</li>
 </ul><h2>Examples</h2>
 
 <p>See <code>./doc/samples.lua</code></p>
