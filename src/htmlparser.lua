@@ -24,7 +24,7 @@ local function parse(text)
       start, apos, k, eq, quote = string.find(tagst, 
         "%s+" ..       -- some uncaptured space
         "([^%s=]+)" .. -- k = an unspaced string up to an optional "="
-        "(=?)" ..      -- eq = the optiona; "=", else ""
+        "(=?)" ..      -- eq = the optional; "=", else ""
         "(['\"]?)",    -- quote = an optional "'" or '"' following the "=", or ""
       apos)
       if not k or k == "/>" then break end
