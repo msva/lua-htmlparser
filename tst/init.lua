@@ -53,6 +53,9 @@ function test_descendants()
 				<child>8</child>
 			</arbitrary>
 		</parent>
+		<arbitrary>
+			<child>not</child>
+		</arbitrary>
 	]])
 	sel = tree("parent child")
 	assert_equal(8, sel:len(), 'parent child')
@@ -78,6 +81,9 @@ function test_children()
 				<child>not</child>
 			</arbitrary>
 		</parent>
+		<arbitrary>
+			<child>not</child>
+		</arbitrary>
 	]])
 	sel = tree("parent > child")
 	assert_equal(4, sel:len(), 'parent > child')
