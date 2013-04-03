@@ -51,9 +51,8 @@ function ElementNode:addattribute(k, v)
   self.attributes[k] = v
   if string.lower(k) == "id" then
     self.id = v
-  end
   -- class attribute contains "space-separated tokens", each of which we'd like quick access to
-  if string.lower(k) == "class" then
+  elseif string.lower(k) == "class" then
     for class in string.gmatch(v, "%S+") do
       table.insert(self.classes, class)
     end
@@ -98,18 +97,20 @@ local function select(self, s)
   local sets = {[""]  = self.deeperelements, ["["] = self.deeperattributes,
                 ["#"] = self.deeperids,      ["."] = self.deeperclasses}
   local function match(t, w)
-    local m, v
-    if t == "[" then w, m, v = string.match(w, 
+    local m, e, v
+    if t == "[" then w, m, e, v = string.match(w, 
         "([^=|%*~%$!%^]+)" .. -- w = 1 or more characters up to a possible "=", "|", "*", "~", "$", "!", or "^"
         "([|%*~%$!%^]?)" ..   -- m = an optional "|", "*", "~", "$", "!", or "^", preceding the optional "="
-        "=?" ..               -- an optional uncaptured "="
+        "(=?)" ..             -- e = the optional "="
         "(.*)"                -- v = anything following the "=", or else ""
       )
     end
     local matched = Set:new(sets[t][w])
     -- attribute value selectors
-    if v and v ~= "" then
+    if e == "=" then
+      if #v < 2 then v = "'" .. v .. "'" end -- values should be quoted
       v = string.sub(v, 2, #v - 1) -- strip quotes
+      if m == "!" then matched = Set:new(self.deepernodes) end -- include those without that attribute
       for node in pairs(matched) do
         local a = node.attributes[w]
         -- equals
