@@ -76,7 +76,10 @@ Selectors can be combined; e.g. `".class:not([attribute]) element.class"`
 - The HTML text is not validated in any way; tag and attribute names and the nesting of different tags is completely arbitrary. The only HTML-specific part of the parser is that it knows which tags are void elements
 
 ##Examples
-See `./doc/samples.lua`
+See `./doc/sample.lua`
+
+##Tests
+See `./tst/init.lua`
 
 ##Element type
 All tree elements provide, apart from `:select` and `()`, the following accessors:
