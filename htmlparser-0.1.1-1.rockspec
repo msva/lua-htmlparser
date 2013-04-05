@@ -1,8 +1,8 @@
 package = "htmlparser"
-version = "0.2-1"
+version = "0.1.1-1"
 source = {
   url = "git://github.com/wscherphof/lua-htmlparser.git",
-  branch = "v0.2"
+  branch = "v0.1.1"
 }
 description = {
   summary = "Parse HTML text into a tree of elements with selectors",
