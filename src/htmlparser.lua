@@ -23,21 +23,19 @@ local function parse(text)
       local start, k, eq, quote, v
       start, apos, k, eq, quote = string.find(tagst, 
         "%s+" ..       -- some uncaptured space
-        "([^%s=]+)" .. -- k = an unspaced string up to an optional "="
+        "([^%s=/>]+)" .. -- k = an unspaced string up to an optional "=" or the "/" or ">"
         "(=?)" ..      -- eq = the optional; "=", else ""
         "(['\"]?)",    -- quote = an optional "'" or '"' following the "=", or ""
       apos)
       if not k or k == "/>" or k == ">" then break end
-      if eq == "" then
-        v = ""
-      else
+      if eq == "=" then
         local pattern = "=([^%s>]*)"
-        if quote ~= '' then
+        if quote ~= "" then
           pattern = quote .. "([^" .. quote .. "]*)" .. quote
         end
         start, apos, v = string.find(tagst, pattern, apos)
       end
-      tag:addattribute(k, v)
+      tag:addattribute(k, v or "")
     end
 
     if voidelements[string.lower(tag.name)] then

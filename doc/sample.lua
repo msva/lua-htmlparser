@@ -23,58 +23,6 @@ local function p(n)
 end
 p(root)
 
-local function select( s )
-  print ""
-  print("->", s)
-  local sel = root:select(s)
-  for element in pairs(sel) do
-    print(element.name)
-  end
-  print(sel:len())
-end
-
-select("*")
-select("link")
-select("#/contacts/4711")
-select(".chapters")
-select("[href]")
-select("span.firstname")
-select("ul[id]")
-
-select("#/contacts/4711")
-select("#/contacts/4711 *")
-select("#/contacts/4711 .lastname")
-select("body li[id]")
-
-select("ul")
-select("ul *")
-select("ul > *")
-select("body [class]")
-select("body > [class]")
-
-select(".contacts span:not(.firstname)")
-select(":not(a)[href]")
-select("[itemscope]:not([itemprop])")
-
-select("link[rel='alternate']")
-select("[test2=\"val='2'\"]")
-select("[test5='val5']")
-select("[test6='val\"\"6']")
-select("[itemscope='']")
-select("[itemscope=]")
-select("[itemscope]")
-
-select("[itemscope][itemprop='address']")
-select("[itemscope][itemprop!='address']")
-select("[itemscope][itemprop!='adres']")
-select("[itemscope][itemprop!='']")
-select("[hreflang|='en']")
-select("[itemprop*='address']")
-select("[words~='two']")
-select("[words~='three']")
-select("[itemprop$='ion']")
-select("[hreflang^='en']")
-
 print("\nchapters")
 local sel, chapters = root("ol.chapters > li"), {}
 for e in pairs(sel) do
