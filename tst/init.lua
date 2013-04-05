@@ -31,6 +31,35 @@ function test_void()
 	end
 end
 
+function test_id()
+	local tree = htmlparser.parse([[
+		<n id="4711">
+			<m id="1174"></m>
+		</n>
+	]])
+	assert_equal(1, #tree.nodes, "top level")
+	assert_equal("n", tree("#4711"):tolist()[1].name, "#4711")
+	assert_equal("m", tree("#1174"):tolist()[1].name, "#1174")
+end
+
+function test_class()
+	local tree = htmlparser.parse([[
+		<n class="one">
+			<n class="two">
+				<n class="three"></n>
+			</n>
+		</n>
+		<n class="two three"></n>
+		<n ssalc="four"></n>
+	]])
+	assert_equal(3, #tree.nodes, "top level")
+	assert_equal(1, tree(".one"):len(), ".one")
+	assert_equal(2, tree(".two"):len(), ".two")
+	assert_equal(2, tree(".three"):len(), ".three")
+	assert_equal(1, tree(".two.three"):len(), ".two.three")
+	assert_equal(0, tree(".four"):len(), ".four")
+end
+
 function test_attr()
 	local tree = htmlparser.parse([[
 		<n a1 a2= a3='' a4=""
@@ -187,4 +216,35 @@ function test_children()
 		</arbitrary>
 	]])
 	assert_equal(4, tree("parent > child"):len(), 'parent > child')
+end
+
+function test_not()
+	local tree = htmlparser.parse([[
+		<n a1="1" a2>
+			<m a1="1"></m>
+		</n>
+		<n a2></n>
+	]])
+	assert_equal(2, #tree.nodes, "top level")
+	assert_equal(1, tree(":not([a1=1])"):len(), ":not([a1=1])")
+	assert_equal(1, tree(":not([a2])"):len(), ":not([a2])")
+	assert_equal(1, tree(":not(n)"):len(), ":not(n)")
+	assert_equal(2, tree(":not(m)"):len(), ":not(m)")
+end
+
+function test_combine()
+	local tree = htmlparser.parse([[
+		<e class="a b c" a="2-two">
+			<n b="123"></n>
+			<n id="123" b="321">
+				<n b="222"></n>
+				<n class="c" b="345"></n>
+			</n>
+		</e>
+		<n b="222"></n>
+	]])
+	assert_equal(2, #tree.nodes, "top level")
+	assert_equal(2, tree("e.c:not([a|='1']) > n[b*='2']"):len(), "e.c:not([a|='1']) > n[b*='2']")
+	assert_equal(3, tree("e.c:not([a|='1'])   n[b*='2']"):len(), "e.c:not([a|='1'])   n[b*='2']")
+	assert_equal(1, tree("#123 .c[b]"):len(), "#123 .c[b]")
 end
