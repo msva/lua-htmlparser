@@ -31,11 +31,7 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h2>License</h2>
-
-<p>MIT; see <code>./doc/LICENSE</code></p>
-
-<h2>Install</h2>
+        <h2>Install</h2>
 
 <p>Htmlparser is a listed <a href="http://luarocks.org/repositories/rocks/">LuaRock</a>. Install using <a href="http://www.luarocks.org/">LuaRocks</a>: <code>luarocks install htmlparser</code></p>
 
@@ -96,9 +92,9 @@ Now, find sepcific contained elements by selecting:</p>
 <li>
 <code>"[attribute]"</code> elements with an attribute of the given name</li>
 <li>
-<code>"[attribute='value']"</code> equals: elements with the given value for the attribute with the given name</li>
+<code>"[attribute='value']"</code> equals: elements with the given value for the given attribute</li>
 <li>
-<code>"[attribute!='value']"</code> not equals: elements without an attribute of the given name, or with that attribute, but with a value that is different from the given value</li>
+<code>"[attribute!='value']"</code> not equals: elements without the given attribute, or having the attribute, but with a different value</li>
 <li>
 <code>"[attribute|='value']"</code> prefix: attribute's value is given value, or starts with given value, followed by a hyphen (<code>-</code>)</li>
 <li>
@@ -116,27 +112,6 @@ Now, find sepcific contained elements by selecting:</p>
 <li>
 <code>"parent &gt; child"</code> elements selected by the <code>child</code> selector string, that are a child element of any element selected by the <code>parent</code> selector string</li>
 </ul><p>Selectors can be combined; e.g. <code>".class:not([attribute]) element.class"</code></p>
-
-<h3>Limitations</h3>
-
-<ul>
-<li>Attribute values in selectors currently cannot contain any spaces, since space is interpreted as a delimiter between the <code>ancestor</code> and <code>descendant</code>, <code>parent</code> and <code>&gt;</code>, or <code>&gt;</code> and <code>child</code> parts of the selector</li>
-<li>Consequently, for the <code>parent &gt; child</code> relation, the spaces before and after the <code>&gt;</code> are mandatory</li>
-<li>Attribute values in selectors currently also cannot contain any of <code>#</code>, <code>.</code>, <code>[</code>, <code>]</code>, <code>:</code>, <code>(</code>, or <code>)</code>
-</li>
-<li>
-<code>&lt;!</code> elements are not parsed, including doctype, comments, and CDATA</li>
-<li>Textnodes are not seperate entries in the tree, so the content of <code>&lt;p&gt;line1&lt;br /&gt;line2&lt;/p&gt;</code> is plainly <code>"line1&lt;br /&gt;line2"</code>
-</li>
-<li>All start and end tags should be explicitly specified in the text to be parsed; omitted tags (as <a href="http://www.w3.org/TR/html5/syntax.html#optional-tags">permitted</a> by the the HTML spec) are NOT implied. Only the <a href="http://www.w3.org/TR/html5/syntax.html#void-elements">void</a> elements naturally don't need (and mustn't have) an end tag</li>
-<li>The HTML text is not validated in any way; tag and attribute names and the nesting of different tags is completely arbitrary. The only HTML-specific part of the parser is that it knows which tags are void elements</li>
-</ul><h2>Examples</h2>
-
-<p>See <code>./doc/sample.lua</code></p>
-
-<h2>Tests</h2>
-
-<p>See <code>./tst/init.lua</code></p>
 
 <h2>Element type</h2>
 
@@ -164,7 +139,7 @@ Now, find sepcific contained elements by selecting:</p>
 
 <ul>
 <li>
-<code>:gettext()</code> the raw text of the complete element, starting with <code>"&lt;tagname"</code> and ending with <code>"/&gt;"</code>
+<code>:gettext()</code> the complete element text, starting with <code>"&lt;tagname"</code> and ending with <code>"/&gt;"</code> or <code>"&lt;/tagname&gt;"</code>
 </li>
 <li>
 <code>.level</code> how deep the element is in the tree; root level is <code>0</code>
@@ -182,7 +157,29 @@ Now, find sepcific contained elements by selecting:</p>
 <code>.deeperids</code> as <code>.deeperelements</code>, but keyed on id value</li>
 <li>
 <code>.deeperclasses</code> as <code>.deeperelements</code>, but keyed on class name</li>
-</ul>
+</ul><h2>Limitations</h2>
+
+<ul>
+<li>Attribute values in selector strings cannot contain any spaces, nor any of <code>#</code>, <code>.</code>, <code>[</code>, <code>]</code>, <code>:</code>, <code>(</code>, or <code>)</code>
+</li>
+<li>The spaces before and after the <code>&gt;</code> in a <code>parent &gt; child</code> relation are mandatory </li>
+<li>
+<code>&lt;!</code> elements (including doctype, comments, and CDATA) are not parsed; markup within CDATA is <em>not</em> escaped</li>
+<li>Textnodes are no seperate tree elements; in <code>local root = htmlparser.parse("&lt;p&gt;line1&lt;br /&gt;line2&lt;/p&gt;")</code>, <code>root.nodes[1]:getcontent()</code> is <code>"line1&lt;br /&gt;line2"</code>, while <code>root.nodes[1].nodes[1].name</code> is <code>"br"</code>
+</li>
+<li>No start or end tags are implied when <a href="http://www.w3.org/TR/html5/syntax.html#optional-tags">omitted</a>. Only the <a href="http://www.w3.org/TR/html5/syntax.html#void-elements">void elements</a> should not have an end tag</li>
+<li>No validation is done for tag or attribute names or nesting of element types. The list of void elements is in fact the only part specific to HTML</li>
+</ul><h2>Examples</h2>
+
+<p>See <code>./doc/sample.lua</code></p>
+
+<h2>Tests</h2>
+
+<p>See <code>./tst/init.lua</code></p>
+
+<h2>License</h2>
+
+<p>MIT; see <code>./doc/LICENSE</code></p>
       </section>
     </div>
 
