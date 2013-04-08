@@ -5,9 +5,6 @@ Parse HTML text into a tree of elements with selectors
 [1]: http://wscherphof.github.com/lua-set/
 [2]: http://api.jquery.com/category/selectors/
 
-##License
-MIT; see `./doc/LICENSE`
-
 ##Install
 Htmlparser is a listed [LuaRock](http://luarocks.org/repositories/rocks/). Install using [LuaRocks](http://www.luarocks.org/): `luarocks install htmlparser`
 
@@ -66,7 +63,29 @@ Supported selectors are a subset of [jQuery's selectors][2]:
 
 Selectors can be combined; e.g. `".class:not([attribute]) element.class"`
 
-###Limitations
+##Element type
+All tree elements provide, apart from `:select` and `()`, the following accessors:
+
+###Basic
+- `.name` the element's tagname
+- `.attributes` a table with keys and values for the element's attributes; `{}` if none
+- `.id` the value of the element's id attribute; `nil` if not present
+- `.classes` an array with the classes listed in element's class attribute; `{}` if none
+- `:getcontent()` the raw text between the opening and closing tags of the element; `""` if none
+- `.nodes` an array with the element's child elements, `{}` if none
+- `.parent` the elements that contains this element; `root.parent` is `nil`
+
+###Other
+- `:gettext()` the raw text of the complete element, starting with `"<tagname"` and ending with `"/>"` or `"</tagname>"`
+- `.level` how deep the element is in the tree; root level is `0`
+- `.root` the root element of the tree; `root.root` is `root`
+- `.deepernodes` a [Set][1] containing all elements in the tree beneath this element, including this element's `.nodes`; `{}` if none
+- `.deeperelements` a table with a key for each distinct tagname in `.deepernodes`, containing a [Set][1] of all deeper element nodes with that name; `{}` in none
+- `.deeperattributes` as `.deeperelements`, but keyed on attribute name
+- `.deeperids` as `.deeperelements`, but keyed on id value
+- `.deeperclasses` as `.deeperelements`, but keyed on class name
+
+##Limitations
 - Attribute values in selectors currently cannot contain any spaces, since space is interpreted as a delimiter between the `ancestor` and `descendant`, `parent` and `>`, or `>` and `child` parts of the selector
 - Consequently, for the `parent > child` relation, the spaces before and after the `>` are mandatory
 - Attribute values in selectors currently also cannot contain any of `#`, `.`, `[`, `]`, `:`, `(`, or `)`
@@ -81,24 +100,5 @@ See `./doc/sample.lua`
 ##Tests
 See `./tst/init.lua`
 
-##Element type
-All tree elements provide, apart from `:select` and `()`, the following accessors:
-
-###Basic
-- `.name` the element's tagname
-- `.attributes` a table with keys and values for the element's attributes; `{}` if none
-- `.id` the value of the element's id attribute; `nil` if not present
-- `.classes` an array with the classes listed in element's class attribute; `{}` if none
-- `:getcontent()` the raw text between the opening and closing tags of the element; `""` if none
-- `.nodes` an array with the element's child elements, `{}` if none
-- `.parent` the elements that contains this element; `root.parent` is `nil`
-
-###Other
-- `:gettext()` the raw text of the complete element, starting with `"<tagname"` and ending with `"/>"`
-- `.level` how deep the element is in the tree; root level is `0`
-- `.root` the root element of the tree; `root.root` is `root`
-- `.deepernodes` a [Set][1] containing all elements in the tree beneath this element, including this element's `.nodes`; `{}` if none
-- `.deeperelements` a table with a key for each distinct tagname in `.deepernodes`, containing a [Set][1] of all deeper element nodes with that name; `{}` in none
-- `.deeperattributes` as `.deeperelements`, but keyed on attribute name
-- `.deeperids` as `.deeperelements`, but keyed on id value
-- `.deeperclasses` as `.deeperelements`, but keyed on class name
+##License
+MIT; see `./doc/LICENSE`
