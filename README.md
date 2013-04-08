@@ -50,8 +50,8 @@ Supported selectors are a subset of [jQuery's selectors][2]:
 - `"#id"` elements with the given id attribute value
 - `".class"` elements with the given classname in the class attribute
 - `"[attribute]"` elements with an attribute of the given name
-- `"[attribute='value']"` equals: elements with the given value for the attribute with the given name
-- `"[attribute!='value']"` not equals: elements without an attribute of the given name, or with that attribute, but with a value that is different from the given value
+- `"[attribute='value']"` equals: elements with the given value for the given attribute
+- `"[attribute!='value']"` not equals: elements without the given attribute, or having the attribute, but with a different value
 - `"[attribute|='value']"` prefix: attribute's value is given value, or starts with given value, followed by a hyphen (`-`)
 - `"[attribute*='value']"` contains: attribute's value contains given value
 - `"[attribute~='value']"` word: attribute's value is a space-separated token, where one of the tokens is the given value
@@ -76,7 +76,7 @@ All tree elements provide, apart from `:select` and `()`, the following accessor
 - `.parent` the elements that contains this element; `root.parent` is `nil`
 
 ###Other
-- `:gettext()` the raw text of the complete element, starting with `"<tagname"` and ending with `"/>"` or `"</tagname>"`
+- `:gettext()` the complete element text, starting with `"<tagname"` and ending with `"/>"` or `"</tagname>"`
 - `.level` how deep the element is in the tree; root level is `0`
 - `.root` the root element of the tree; `root.root` is `root`
 - `.deepernodes` a [Set][1] containing all elements in the tree beneath this element, including this element's `.nodes`; `{}` if none
@@ -86,13 +86,12 @@ All tree elements provide, apart from `:select` and `()`, the following accessor
 - `.deeperclasses` as `.deeperelements`, but keyed on class name
 
 ##Limitations
-- Attribute values in selectors currently cannot contain any spaces, since space is interpreted as a delimiter between the `ancestor` and `descendant`, `parent` and `>`, or `>` and `child` parts of the selector
-- Consequently, for the `parent > child` relation, the spaces before and after the `>` are mandatory
-- Attribute values in selectors currently also cannot contain any of `#`, `.`, `[`, `]`, `:`, `(`, or `)`
-- `<!` elements are not parsed, including doctype, comments, and CDATA
-- Textnodes are not seperate entries in the tree, so the content of `<p>line1<br />line2</p>` is plainly `"line1<br />line2"`
-- All start and end tags should be explicitly specified in the text to be parsed; omitted tags (as [permitted](http://www.w3.org/TR/html5/syntax.html#optional-tags) by the the HTML spec) are NOT implied. Only the [void](http://www.w3.org/TR/html5/syntax.html#void-elements) elements naturally don't need (and mustn't have) an end tag
-- The HTML text is not validated in any way; tag and attribute names and the nesting of different tags is completely arbitrary. The only HTML-specific part of the parser is that it knows which tags are void elements
+- Attribute values in selector strings cannot contain any spaces, nor any of `#`, `.`, `[`, `]`, `:`, `(`, or `)`
+- The spaces before and after the `>` in a `parent > child` relation are mandatory 
+- `<!` elements (including doctype, comments, and CDATA) are not parsed; markup within CDATA is *not* escaped
+- Textnodes are no seperate tree elements; in `local root = htmlparser.parse("<p>line1<br />line2</p>")`, `root.nodes[1]:getcontent()` is `"line1<br />line2"`, while `root.nodes[1].nodes[1].name` is `"br"`
+- No start or end tags are implied when [omitted](http://www.w3.org/TR/html5/syntax.html#optional-tags). Only the [void elements](http://www.w3.org/TR/html5/syntax.html#void-elements) should not have an end tag
+- No validation is done for tag or attribute names or nesting of element types. The list of void elements is in fact the only part specific to HTML
 
 ##Examples
 See `./doc/sample.lua`
