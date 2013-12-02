@@ -22,7 +22,7 @@ Then, parse some html:
 local root = htmlparser.parse(htmlstring)
 ```
 The input to parse may be the contents of a complete html document, or any valid html snippet, as long as all tags are correctly opened and closed.
-Now, find sepcific contained elements by selecting:
+Now, find specific contained elements by selecting:
 ```lua
 local elements = root:select(selectorstring)
 ```
@@ -89,7 +89,7 @@ All tree elements provide, apart from `:select` and `()`, the following accessor
 - Attribute values in selector strings cannot contain any spaces, nor any of `#`, `.`, `[`, `]`, `:`, `(`, or `)`
 - The spaces before and after the `>` in a `parent > child` relation are mandatory 
 - `<!` elements (including doctype, comments, and CDATA) are not parsed; markup within CDATA is *not* escaped
-- Textnodes are no seperate tree elements; in `local root = htmlparser.parse("<p>line1<br />line2</p>")`, `root.nodes[1]:getcontent()` is `"line1<br />line2"`, while `root.nodes[1].nodes[1].name` is `"br"`
+- Textnodes are no separate tree elements; in `local root = htmlparser.parse("<p>line1<br />line2</p>")`, `root.nodes[1]:getcontent()` is `"line1<br />line2"`, while `root.nodes[1].nodes[1].name` is `"br"`
 - No start or end tags are implied when [omitted](http://www.w3.org/TR/html5/syntax.html#optional-tags). Only the [void elements](http://www.w3.org/TR/html5/syntax.html#void-elements) should not have an end tag
 - No validation is done for tag or attribute names or nesting of element types. The list of void elements is in fact the only part specific to HTML
 
