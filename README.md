@@ -100,4 +100,4 @@ See `./doc/sample.lua`
 See `./tst/init.lua`
 
 ##License
-MIT; see `./doc/LICENSE`
+LGPL+; see `./doc/LICENSE`
