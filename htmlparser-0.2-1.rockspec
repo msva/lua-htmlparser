@@ -14,7 +14,7 @@ description = {
 }
 dependencies = {
   "lua >= 5.2",
-  "set >= 0.1",
+  "set >= 0.2",
   "lunitx >= 0.6"
 }
 build = {
