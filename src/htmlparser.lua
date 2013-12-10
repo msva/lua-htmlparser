@@ -4,7 +4,8 @@ local voidelements = require("htmlparser.voidelements")
 local HtmlParser = {}
 
 local function parse(text)
-  local root = ElementNode:new(text)
+  local index = 0
+  local root = ElementNode:new(index, text)
 
   local node, descend, tpos, opentags = root, true, 1, {}
   while true do
@@ -15,7 +16,8 @@ local function parse(text)
       "[^>]*>",  -- include, but not capture everything up to the next ">"
     tpos)
     if not name then break end
-    local tag = ElementNode:new(name, node, descend, openstart, tpos)
+    index = index + 1
+    local tag = ElementNode:new(index, name, node, descend, openstart, tpos)
     node = tag
 
     local tagst, apos = tag:gettext(), 1
