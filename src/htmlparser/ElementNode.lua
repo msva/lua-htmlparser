@@ -3,8 +3,9 @@ local Set = require("Set")
 
 local ElementNode = {}
 ElementNode.mt = {__index = ElementNode}
-function ElementNode:new(nameortext, node, descend, openstart, openend)
+function ElementNode:new(index, nameortext, node, descend, openstart, openend)
   local instance = {
+    index = index,
     name = nameortext,
     level = 0,
     parent = nil,
@@ -167,6 +168,8 @@ local function select(self, s)
     subjects = Set:new(resultset)
     ::nextpart::
   end
+  resultset = resultset:tolist()
+  table.sort(resultset, function (a, b) return a.index < b.index end)
   return resultset
 end
 

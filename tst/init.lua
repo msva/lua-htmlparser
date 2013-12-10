@@ -38,8 +38,8 @@ function test_id()
 		</n>
 	]])
 	assert_equal(1, #tree.nodes, "top level")
-	assert_equal("n", tree("#4711"):tolist()[1].name, "#4711")
-	assert_equal("m", tree("#1174"):tolist()[1].name, "#1174")
+	assert_equal("n", tree("#4711")[1].name, "#4711")
+	assert_equal("m", tree("#1174")[1].name, "#1174")
 end
 
 function test_class()
@@ -53,11 +53,11 @@ function test_class()
 		<n ssalc="four"></n>
 	]])
 	assert_equal(3, #tree.nodes, "top level")
-	assert_equal(1, tree(".one"):len(), ".one")
-	assert_equal(2, tree(".two"):len(), ".two")
-	assert_equal(2, tree(".three"):len(), ".three")
-	assert_equal(1, tree(".two.three"):len(), ".two.three")
-	assert_equal(0, tree(".four"):len(), ".four")
+	assert_equal(1, #tree(".one"), ".one")
+	assert_equal(2, #tree(".two"), ".two")
+	assert_equal(2, #tree(".three"), ".three")
+	assert_equal(1, #tree(".two.three"), ".two.three")
+	assert_equal(0, #tree(".four"), ".four")
 end
 
 function test_attr()
@@ -68,17 +68,16 @@ function test_attr()
 		a10></n>
 	]])
 	assert_equal(1, #tree.nodes, "top level")
-	local n = tree.nodes[1]
-	assert(tree("[a1]")[n], "a1")
-	assert(tree("[a2]")[n], "a2")
-	assert(tree("[a3]")[n], "a3")
-	assert(tree("[a4]")[n], "a4")
-	assert(tree("[a5]")[n], "a5")
-	assert(tree("[a6]")[n], "a6")
-	assert(tree("[a7]")[n], "a7")
-	assert(tree("[a8]")[n], "a8")
-	assert(tree("[a9]")[n], "a9")
-	assert(tree("[a10]")[n], "a10")
+	assert(tree("[a1]")[1], "a1")
+	assert(tree("[a2]")[1], "a2")
+	assert(tree("[a3]")[1], "a3")
+	assert(tree("[a4]")[1], "a4")
+	assert(tree("[a5]")[1], "a5")
+	assert(tree("[a6]")[1], "a6")
+	assert(tree("[a7]")[1], "a7")
+	assert(tree("[a8]")[1], "a8")
+	assert(tree("[a9]")[1], "a9")
+	assert(tree("[a10]")[1], "a10")
 end
 
 function test_attr_equal()
@@ -89,21 +88,20 @@ function test_attr_equal()
 		a10></n>
 	]])
 	assert_equal(1, #tree.nodes, "top level")
-	local n = tree.nodes[1]
-	assert(tree("[a1='']")[n], "a1=''")
-	assert(tree("[a2='']")[n], "a2=''")
-	assert(tree("[a3='']")[n], "a3=''")
-	assert(tree("[a4='']")[n], "a4=''")
-	assert(tree("[a5='a\"5\"']")[n], "a5='a\"5\"'")
-	assert(tree("[a6=\"a'6'\"]")[n], "a6=\"a'6'\"")
+	assert(tree("[a1='']")[1], "a1=''")
+	assert(tree("[a2='']")[1], "a2=''")
+	assert(tree("[a3='']")[1], "a3=''")
+	assert(tree("[a4='']")[1], "a4=''")
+	assert(tree("[a5='a\"5\"']")[1], "a5='a\"5\"'")
+	assert(tree("[a6=\"a'6'\"]")[1], "a6=\"a'6'\"")
 	-- not these characters
 	-- (because these have a special meaning as id, class, or attribute selector, hierarchy separator, or filter command)
 	-- they can occur in the HTML, but not in a selector string
 	-- assert(tree("[a7='#.[] :()']")[n], "a7='#.[] :()'")
-	assert(tree("[a8='|*+-=?$^%&/']")[n], "a8='|*+-=?$^%&/'")
-	assert(tree("[a9='a9']")[n], "a9='a9'")
-	assert(tree("[a10='']")[n], "a10=''")
-	assert(tree("[a10=]")[n], "a10=")
+	assert(tree("[a8='|*+-=?$^%&/']")[1], "a8='|*+-=?$^%&/'")
+	assert(tree("[a9='a9']")[1], "a9='a9'")
+	assert(tree("[a10='']")[1], "a10=''")
+	assert(tree("[a10=]")[1], "a10=")
 end
 
 function test_attr_notequal()
@@ -114,10 +112,10 @@ function test_attr_notequal()
 		<n></n>
 	]])
 	assert_equal(4, #tree.nodes, "top level")
-	assert_equal(3, tree("[a1!='a1']"):len(), "a1!='a1'")
-	assert_equal(4, tree("[a1!='b1']"):len(), "a1!='b1'")
-	assert_equal(3, tree("[a1!='']"):len(), "a1!=''")
-	assert_equal(3, tree("[a1!=]"):len(), "a1!=")
+	assert_equal(3, #tree("[a1!='a1']"), "a1!='a1'")
+	assert_equal(4, #tree("[a1!='b1']"), "a1!='b1'")
+	assert_equal(3, #tree("[a1!='']"), "a1!=''")
+	assert_equal(3, #tree("[a1!=]"), "a1!=")
 end
 
 function test_attr_prefix_start_end()
@@ -129,9 +127,9 @@ function test_attr_prefix_start_end()
 		<n></n>
 	]])
 	assert_equal(5, #tree.nodes, "top level")
-	assert_equal(3, tree("[a1|='en']"):len(), "a1|='en'")
-	assert_equal(4, tree("[a1^='en']"):len(), "a1^='en'")
-	assert_equal(2, tree("[a1$='en']"):len(), "a1$='en'")
+	assert_equal(3, #tree("[a1|='en']"), "a1|='en'")
+	assert_equal(4, #tree("[a1^='en']"), "a1^='en'")
+	assert_equal(2, #tree("[a1$='en']"), "a1$='en'")
 end
 
 function test_attr_word()
@@ -142,9 +140,9 @@ function test_attr_word()
 		<n></n>
 	]])
 	assert_equal(4, #tree.nodes, "top level")
-	assert_equal(1, tree("[a1~='two']"):len(), "a1~='two'")
-	assert_equal(2, tree("[a1~='three']"):len(), "a1~='three'")
-	assert_equal(1, tree("[a1~='four']"):len(), "a1~='four'")
+	assert_equal(1, #tree("[a1~='two']"), "a1~='two'")
+	assert_equal(2, #tree("[a1~='three']"), "a1~='three'")
+	assert_equal(1, #tree("[a1~='four']"), "a1~='four'")
 end
 
 function test_attr_contains()
@@ -157,11 +155,11 @@ function test_attr_contains()
 		<n></n>
 	]])
 	assert_equal(6, #tree.nodes, "top level")
-	assert_equal(2, tree("[a1*='one']"):len(), "a1*='one'")
-	assert_equal(2, tree("[a1*='t']"):len(), "a1*='t'")
-	assert_equal(1, tree("[a1*='f']"):len(), "a1*='f'")
-	assert_equal(5, tree("[a1*='']"):len(), "a1*=''")
-	assert_equal(5, tree("[a1*=]"):len(), "a1*=")
+	assert_equal(2, #tree("[a1*='one']"), "a1*='one'")
+	assert_equal(2, #tree("[a1*='t']"), "a1*='t'")
+	assert_equal(1, #tree("[a1*='f']"), "a1*='f'")
+	assert_equal(5, #tree("[a1*='']"), "a1*=''")
+	assert_equal(5, #tree("[a1*=]"), "a1*=")
 end
 
 function test_descendants()
@@ -188,7 +186,7 @@ function test_descendants()
 			<child>not</child>
 		</arbitrary>
 	]])
-	assert_equal(8, tree("parent child"):len(), 'parent child')
+	assert_equal(8, #tree("parent child"), 'parent child')
 end
 
 function test_children()
@@ -215,7 +213,7 @@ function test_children()
 			<child>not</child>
 		</arbitrary>
 	]])
-	assert_equal(4, tree("parent > child"):len(), 'parent > child')
+	assert_equal(4, #tree("parent > child"), 'parent > child')
 end
 
 function test_not()
@@ -226,10 +224,10 @@ function test_not()
 		<n a2></n>
 	]])
 	assert_equal(2, #tree.nodes, "top level")
-	assert_equal(1, tree(":not([a1=1])"):len(), ":not([a1=1])")
-	assert_equal(1, tree(":not([a2])"):len(), ":not([a2])")
-	assert_equal(1, tree(":not(n)"):len(), ":not(n)")
-	assert_equal(2, tree(":not(m)"):len(), ":not(m)")
+	assert_equal(1, #tree(":not([a1=1])"), ":not([a1=1])")
+	assert_equal(1, #tree(":not([a2])"), ":not([a2])")
+	assert_equal(1, #tree(":not(n)"), ":not(n)")
+	assert_equal(2, #tree(":not(m)"), ":not(m)")
 end
 
 function test_combine()
@@ -244,7 +242,41 @@ function test_combine()
 		<n b="222"></n>
 	]])
 	assert_equal(2, #tree.nodes, "top level")
-	assert_equal(2, tree("e.c:not([a|='1']) > n[b*='2']"):len(), "e.c:not([a|='1']) > n[b*='2']")
-	assert_equal(3, tree("e.c:not([a|='1'])   n[b*='2']"):len(), "e.c:not([a|='1'])   n[b*='2']")
-	assert_equal(1, tree("#123 .c[b]"):len(), "#123 .c[b]")
+	assert_equal(2, #tree("e.c:not([a|='1']) > n[b*='2']"), "e.c:not([a|='1']) > n[b*='2']")
+	assert_equal(3, #tree("e.c:not([a|='1'])   n[b*='2']"), "e.c:not([a|='1'])   n[b*='2']")
+	assert_equal(1, #tree("#123 .c[b]"), "#123 .c[b]")
+end
+
+function test_order()
+  local tree = htmlparser.parse([[
+    <1>
+      <n>1</n>
+      <2>
+        <n>2</n>
+        <n>3</n>
+        <3>
+          <n>4</n>
+          <n>5</n>
+          <n>6</n>
+          <4>
+            <n>7</n>
+            <n>8</n>
+            <n>9</n>
+            <n>10</n>
+          </4>
+        </3>
+      </2>
+    </1>
+  ]])
+  assert_equal(1, #tree.nodes, "top level")
+  local n = tree("n")
+  assert_equal(10, #n, "n")
+  for i,v in pairs(n) do
+    assert_equal(i, tonumber(v:getcontent()), "n order")
+  end
+  local notn = tree(":not(n)")
+  assert_equal(4, #notn, "notn")
+  for i,v in pairs(notn) do
+    assert_equal(i, tonumber(v.name), "notn order")
+  end
 end
