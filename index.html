@@ -39,7 +39,7 @@
 <h3>
 <a name="dependencies" class="anchor" href="#dependencies"><span class="octicon octicon-link"></span></a>Dependencies</h3>
 
-<p>Htmlparser depends on <a href="http://www.lua.org/download.html">Lua 5.2</a>, and on the ["set"][1] LuaRock, which is installed along automatically. To be able to run the tests, <a href="https://github.com/dcurrie/lunit">lunitx</a> also comes along as a LuaRock</p>
+<p>Htmlparser depends on <a href="http://www.lua.org/download.html">Lua 5.2</a>, and on the <a href="http://wscherphof.github.com/lua-set/">"set"</a> LuaRock, which is installed along automatically. To be able to run the tests, <a href="https://github.com/dcurrie/lunit">lunitx</a> also comes along as a LuaRock</p>
 
 <h2>
 <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
@@ -66,12 +66,12 @@ Now, find specific contained elements by selecting:</p>
 <div class="highlight highlight-lua"><pre><span class="kd">local</span> <span class="n">elements</span> <span class="o">=</span> <span class="n">root</span><span class="p">(</span><span class="n">selectorstring</span><span class="p">)</span>
 </pre></div>
 
-<p>This wil return a [Set][1] of elements, all of which are of the same type as the root element, and thus support selecting as well, if ever needed:</p>
+<p>This wil return a list of elements, all of which are of the same type as the root element, and thus support selecting as well, if ever needed:</p>
 
-<div class="highlight highlight-lua"><pre><span class="k">for</span> <span class="n">e</span> <span class="k">in</span> <span class="nb">pairs</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="k">do</span>
+<div class="highlight highlight-lua"><pre><span class="k">for</span> <span class="n">_</span><span class="p">,</span><span class="n">e</span> <span class="k">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="k">do</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
     <span class="kd">local</span> <span class="n">subs</span> <span class="o">=</span> <span class="n">e</span><span class="p">(</span><span class="n">subselectorstring</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">sub</span> <span class="k">in</span> <span class="nb">pairs</span><span class="p">(</span><span class="n">subs</span><span class="p">)</span> <span class="k">do</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span><span class="n">sub</span> <span class="k">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">subs</span><span class="p">)</span> <span class="k">do</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="s">"</span><span class="p">,</span> <span class="n">sub</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
     <span class="k">end</span>
 <span class="k">end</span>
@@ -82,7 +82,7 @@ Now, find specific contained elements by selecting:</p>
 <h2>
 <a name="selectors" class="anchor" href="#selectors"><span class="octicon octicon-link"></span></a>Selectors</h2>
 
-<p>Supported selectors are a subset of [jQuery's selectors][2]:</p>
+<p>Supported selectors are a subset of <a href="http://api.jquery.com/category/selectors/">jQuery's selectors</a>:</p>
 
 <ul>
 <li>
@@ -146,6 +146,9 @@ Now, find specific contained elements by selecting:</p>
 
 <ul>
 <li>
+<code>.index</code> sequence number of elements in order of appearance; root index is <code>0</code>
+</li>
+<li>
 <code>:gettext()</code> the complete element text, starting with <code>"&lt;tagname"</code> and ending with <code>"/&gt;"</code> or <code>"&lt;/tagname&gt;"</code>
 </li>
 <li>
@@ -155,9 +158,9 @@ Now, find specific contained elements by selecting:</p>
 <code>.root</code> the root element of the tree; <code>root.root</code> is <code>root</code>
 </li>
 <li>
-<code>.deepernodes</code> a [Set][1] containing all elements in the tree beneath this element, including this element's <code>.nodes</code>; <code>{}</code> if none</li>
+<code>.deepernodes</code> a <a href="http://wscherphof.github.com/lua-set/">Set</a> containing all elements in the tree beneath this element, including this element's <code>.nodes</code>; <code>{}</code> if none</li>
 <li>
-<code>.deeperelements</code> a table with a key for each distinct tagname in <code>.deepernodes</code>, containing a [Set][1] of all deeper element nodes with that name; <code>{}</code> in none</li>
+<code>.deeperelements</code> a table with a key for each distinct tagname in <code>.deepernodes</code>, containing a <a href="http://wscherphof.github.com/lua-set/">Set</a> of all deeper element nodes with that name; <code>{}</code> in none</li>
 <li>
 <code>.deeperattributes</code> as <code>.deeperelements</code>, but keyed on attribute name</li>
 <li>
