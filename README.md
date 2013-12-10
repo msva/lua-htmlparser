@@ -30,12 +30,12 @@ Or in shorthand:
 ```lua
 local elements = root(selectorstring)
 ```
-This wil return a [Set][1] of elements, all of which are of the same type as the root element, and thus support selecting as well, if ever needed:
+This wil return a list of elements, all of which are of the same type as the root element, and thus support selecting as well, if ever needed:
 ```lua
-for e in pairs(elements) do
+for _,e in ipairs(elements) do
 	print(e.name)
 	local subs = e(subselectorstring)
-	for sub in pairs(subs) do
+	for _,sub in ipairs(subs) do
 		print("", sub.name)
 	end
 end
@@ -76,6 +76,7 @@ All tree elements provide, apart from `:select` and `()`, the following accessor
 - `.parent` the elements that contains this element; `root.parent` is `nil`
 
 ###Other
+- `.index` sequence number of elements in order of appearance; root index is `0`
 - `:gettext()` the complete element text, starting with `"<tagname"` and ending with `"/>"` or `"</tagname>"`
 - `.level` how deep the element is in the tree; root level is `0`
 - `.root` the root element of the tree; `root.root` is `root`
