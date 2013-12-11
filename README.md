@@ -73,7 +73,7 @@ All tree elements provide, apart from `:select` and `()`, the following accessor
 - `.classes` an array with the classes listed in element's class attribute; `{}` if none
 - `:getcontent()` the raw text between the opening and closing tags of the element; `""` if none
 - `.nodes` an array with the element's child elements, `{}` if none
-- `.parent` the elements that contains this element; `root.parent` is `nil`
+- `.parent` the element that contains this element; `root.parent` is `nil`
 
 ###Other
 - `.index` sequence number of elements in order of appearance; root index is `0`
