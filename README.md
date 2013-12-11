@@ -81,7 +81,7 @@ All tree elements provide, apart from `:select` and `()`, the following accessor
 - `.level` how deep the element is in the tree; root level is `0`
 - `.root` the root element of the tree; `root.root` is `root`
 - `.deepernodes` a [Set][1] containing all elements in the tree beneath this element, including this element's `.nodes`; `{}` if none
-- `.deeperelements` a table with a key for each distinct tagname in `.deepernodes`, containing a [Set][1] of all deeper element nodes with that name; `{}` in none
+- `.deeperelements` a table with a key for each distinct tagname in `.deepernodes`, containing a [Set][1] of all deeper element nodes with that name; `{}` if none
 - `.deeperattributes` as `.deeperelements`, but keyed on attribute name
 - `.deeperids` as `.deeperelements`, but keyed on id value
 - `.deeperclasses` as `.deeperelements`, but keyed on class name
