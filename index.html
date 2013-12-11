@@ -139,7 +139,7 @@ Now, find specific contained elements by selecting:</p>
 <li>
 <code>.nodes</code> an array with the element's child elements, <code>{}</code> if none</li>
 <li>
-<code>.parent</code> the elements that contains this element; <code>root.parent</code> is <code>nil</code>
+<code>.parent</code> the element that contains this element; <code>root.parent</code> is <code>nil</code>
 </li>
 </ul><h3>
 <a name="other" class="anchor" href="#other"><span class="octicon octicon-link"></span></a>Other</h3>
@@ -160,7 +160,7 @@ Now, find specific contained elements by selecting:</p>
 <li>
 <code>.deepernodes</code> a <a href="http://wscherphof.github.com/lua-set/">Set</a> containing all elements in the tree beneath this element, including this element's <code>.nodes</code>; <code>{}</code> if none</li>
 <li>
-<code>.deeperelements</code> a table with a key for each distinct tagname in <code>.deepernodes</code>, containing a <a href="http://wscherphof.github.com/lua-set/">Set</a> of all deeper element nodes with that name; <code>{}</code> in none</li>
+<code>.deeperelements</code> a table with a key for each distinct tagname in <code>.deepernodes</code>, containing a <a href="http://wscherphof.github.com/lua-set/">Set</a> of all deeper element nodes with that name; <code>{}</code> if none</li>
 <li>
 <code>.deeperattributes</code> as <code>.deeperelements</code>, but keyed on attribute name</li>
 <li>
