@@ -85,7 +85,7 @@ function test_attr_equal()
 		<n a1 a2= a3='' a4=""
 			a5='a"5"' a6="a'6'" a7='#.[] :()' a8='|*+-=?$^%&/'
 			a9=a9
-		a10></n>
+		a10 a11="a11.js.jpg"></n>
 	]])
 	assert_equal(1, #tree.nodes, "top level")
 	assert(tree("[a1='']")[1], "a1=''")
@@ -102,6 +102,8 @@ function test_attr_equal()
 	assert(tree("[a9='a9']")[1], "a9='a9'")
 	assert(tree("[a10='']")[1], "a10=''")
 	assert(tree("[a10=]")[1], "a10=")
+	-- An excepton for a7. Some times we may select javascript or img nodes with attr selector [src="a.js"] or [src="a.jpg"]
+	assert(tree("[a11='a11.js.jpg']")[1], "a11=")
 end
 
 function test_attr_notequal()

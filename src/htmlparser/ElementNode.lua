@@ -149,11 +149,25 @@ local function select(self, s)
     childrenonly = false
     if part == "*" then goto nextpart end
     local excludes, filter = Set:new()
-    for t, w in string.gmatch(part,
+    local halfword = ""
+    for t, w, c in string.gmatch(part,
       "([:%[#.]?)" ..        -- t = an optional :, [, #, or .
       "([^:%(%[#.%]%)]+)" .. -- w = 1 or more of anything not :, (, [, #, ., ], or )
-      "%]?%)?"               -- followed by an uncaptured optional ] and/or )
+      "(%]?)%)?"               -- followed by an uncaptured optional ] and/or )
     ) do
+      -- this if..elseif.. block will match the pattern like "[src='aaa.jpg']"
+      if t == "[" and c ~= "]" then
+        halfword = t .. w
+        goto nextw
+      elseif c == "" and halfword ~= "" then
+        halfword = halfword .. t .. w
+        goto nextw
+      elseif t ~= "[" and c == "]" then
+        halfword = halfword .. t .. w .. c
+        t, w = "[", string.sub(halfword, 2, -2)
+        halfword = ""
+      end
+
       if t == ":" then filter = w goto nextw end
       local matched = match(t, w)
       if filter == "not" then
