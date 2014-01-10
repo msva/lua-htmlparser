@@ -149,34 +149,37 @@ local function select(self, s)
     childrenonly = false
     if part == "*" then goto nextpart end
     local excludes, filter = Set:new()
-    local halfword = ""
-    for t, w, c in string.gmatch(part,
-      "([:%[#.]?)" ..        -- t = an optional :, [, #, or .
-      "([^:%(%[#.%]%)]+)" .. -- w = 1 or more of anything not :, (, [, #, ., ], or )
-      "(%]?)%)?"               -- followed by an uncaptured optional ] and/or )
-    ) do
-      -- this if..elseif.. block will match the pattern like "[src='aaa.jpg']"
-      if t == "[" and c ~= "]" then
-        halfword = t .. w
-        goto nextw
-      elseif c == "" and halfword ~= "" then
-        halfword = halfword .. t .. w
-        goto nextw
-      elseif t ~= "[" and c == "]" then
-        halfword = halfword .. t .. w .. c
-        t, w = "[", string.sub(halfword, 2, -2)
-        halfword = ""
+    local start, pos = 0, 0
+    while true do
+      local switch, type, name, eq, quote
+      start, pos, switch, type, name, eq, quote = string.find(part,
+        "(%(?%)?)" ..         -- switch = a possible ( or ) switching the filter on or off
+        "([:%[#.]?)" ..       -- type = a possible :, [, #, or .
+        "(%w+)" ..            -- name = 1 or more alfanumeric chars
+        "([|%*~%$!%^]?=?)" .. -- eq = a possible |=, *=, ~=, $=, !=, ^=, or =
+        "(['\"]?)",           -- quote = a ' or " delimiting a possible attribute value
+        pos + 1
+      )
+      if not name then break end
+      if ":" == type then
+        filter = name
+        goto nextname
       end
-
-      if t == ":" then filter = w goto nextw end
-      local matched = match(t, w)
+      if ")" == switch then
+        filter = nil
+      end
+      if "[" == type and "" ~= quote then
+        local value
+        start, pos, value = string.find(part, "(%b" .. quote .. quote .. ")]", pos)
+        name = name .. eq .. value
+      end
+      local matched = match(type, name)
       if filter == "not" then
         excludes = excludes + matched
       else
         resultset = resultset * matched
       end
-      filter = nil
-      ::nextw::
+      ::nextname::
     end
     resultset = resultset - excludes
     subjects = Set:new(resultset)
