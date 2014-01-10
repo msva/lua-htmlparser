@@ -87,7 +87,7 @@ All tree elements provide, apart from `:select` and `()`, the following accessor
 - `.deeperclasses` as `.deeperelements`, but keyed on class name
 
 ##Limitations
-- Attribute values in selector strings cannot contain any spaces, nor any of `#`, `[`, `]`, `:`, `(`, or `)`
+- Attribute values in selector strings cannot contain any spaces
 - The spaces before and after the `>` in a `parent > child` relation are mandatory 
 - `<!` elements (including doctype, comments, and CDATA) are not parsed; markup within CDATA is *not* escaped
 - Textnodes are no separate tree elements; in `local root = htmlparser.parse("<p>line1<br />line2</p>")`, `root.nodes[1]:getcontent()` is `"line1<br />line2"`, while `root.nodes[1].nodes[1].name` is `"br"`
