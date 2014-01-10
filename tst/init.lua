@@ -83,9 +83,9 @@ end
 function test_attr_equal()
 	local tree = htmlparser.parse([[
 		<n a1 a2= a3='' a4=""
-			a5='a"5"' a6="a'6'" a7='#.[] :()' a8='|*+-=?$^%&/'
+			a5='a"5"' a6="a'6'" a7='#.[]:()' a8='|*+-=?$^%&/'
 			a9=a9
-		a10 a11="a11.js.jpg"></n>
+		a10></n>
 	]])
 	assert_equal(1, #tree.nodes, "top level")
 	assert(tree("[a1='']")[1], "a1=''")
@@ -94,16 +94,11 @@ function test_attr_equal()
 	assert(tree("[a4='']")[1], "a4=''")
 	assert(tree("[a5='a\"5\"']")[1], "a5='a\"5\"'")
 	assert(tree("[a6=\"a'6'\"]")[1], "a6=\"a'6'\"")
-	-- not these characters
-	-- (because these have a special meaning as id, class, or attribute selector, hierarchy separator, or filter command)
-	-- they can occur in the HTML, but not in a selector string
-	-- assert(tree("[a7='#.[] :()']")[n], "a7='#.[] :()'")
+	assert(tree("[a7='#.[]:()']")[1], "a7='#.[]:()'")
 	assert(tree("[a8='|*+-=?$^%&/']")[1], "a8='|*+-=?$^%&/'")
 	assert(tree("[a9='a9']")[1], "a9='a9'")
 	assert(tree("[a10='']")[1], "a10=''")
 	assert(tree("[a10=]")[1], "a10=")
-	-- An excepton for a7. Some times we may select javascript or img nodes with attr selector [src="a.js"] or [src="a.jpg"]
-	assert(tree("[a11='a11.js.jpg']")[1], "a11=")
 end
 
 function test_attr_notequal()
