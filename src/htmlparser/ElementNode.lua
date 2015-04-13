@@ -155,7 +155,7 @@ local function select(self, s)
       start, pos, switch, type, name, eq, quote = string.find(part,
         "(%(?%)?)" ..         -- switch = a possible ( or ) switching the filter on or off
         "([:%[#.]?)" ..       -- type = a possible :, [, #, or .
-        "(%w+)" ..            -- name = 1 or more alfanumeric chars
+        "([%w-_\\]+)" ..      -- name = 1 or more alfanumeric chars (+ hyphen, reverse slash and uderscore)
         "([|%*~%$!%^]?=?)" .. -- eq = a possible |=, *=, ~=, $=, !=, ^=, or =
         "(['\"]?)",           -- quote = a ' or " delimiting a possible attribute value
         pos + 1
