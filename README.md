@@ -9,12 +9,12 @@ Parse HTML text into a tree of elements with selectors
 Htmlparser is a listed [LuaRock](http://luarocks.org/repositories/rocks/). Install using [LuaRocks](http://www.luarocks.org/): `luarocks install htmlparser`
 
 ###Dependencies
-Htmlparser depends on [Lua 5.2](http://www.lua.org/download.html), and on the ["set"][1] LuaRock, which is installed along automatically. To be able to run the tests, [lunitx](https://github.com/dcurrie/lunit) also comes along as a LuaRock
+Htmlparser depends on [Lua 5.2](http://www.lua.org/download.html) (while work with LuaJIT, which provides 5.1-compatible ABI), and on the ["lua-set"][1] package, which is installed along automatically. To be able to run the tests, [lunitx](https://github.com/dcurrie/lunit) also comes along as a LuaRock
 
 ##Usage
 Start off with
 ```lua
-require("luarocks.loader")
+pcall(require, "luarocks.loader")
 local htmlparser = require("htmlparser")
 ```
 Then, parse some html:

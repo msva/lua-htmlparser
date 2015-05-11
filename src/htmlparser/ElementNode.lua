@@ -1,4 +1,4 @@
-require("luarocks.loader")
+pcall(require, "luarocks.loader")
 local Set = require("Set")
 
 local ElementNode = {}
