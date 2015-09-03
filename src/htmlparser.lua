@@ -53,7 +53,7 @@ local function parse(text)
       local closestart, closing, closename
       closestart, closeend, closing, closename = string.find(root._text, "[^<]*<(/?)(%w+)", closeend)
       if not closing or closing == "" then break end
-      tag = table.remove(opentags[closename])
+      tag = table.remove(opentags[closename]) or tag -- kludge for cases of closing tag that wasn't opened
       closestart = string.find(root._text, "<", closestart)
       tag:close(closestart, closeend + 1)
       node = tag.parent
