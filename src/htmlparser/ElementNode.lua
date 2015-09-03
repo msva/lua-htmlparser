@@ -212,7 +212,8 @@ local function select(self, s)
 
   local subjects, resultset, childrenonly = Set:new({self})
   for part in string.gmatch(s, "%S+") do
-    if part == ">" then childrenonly = true goto nextpart end
+	repeat
+    if part == ">" then childrenonly = true --[[goto nextpart]] break end
     resultset = Set:new()
     for subject in pairs(subjects) do
       local star = subject.deepernodes
@@ -220,43 +221,48 @@ local function select(self, s)
       resultset = resultset + star
     end
     childrenonly = false
-    if part == "*" then goto nextpart end
+    if part == "*" then --[[goto nextpart]] break end
     local excludes, filter = Set:new()
     local start, pos = 0, 0
     while true do
-      local switch, type, name, eq, quote
-      start, pos, switch, type, name, eq, quote = string.find(part,
+      local switch, stype, name, eq, quote
+      start, pos, switch, stype, name, eq, quote = string.find(part,
         "(%(?%)?)" ..         -- switch = a possible ( or ) switching the filter on or off
-        "([:%[#.]?)" ..       -- type = a possible :, [, #, or .
+        "([:%[#.]?)" ..       -- stype = a possible :, [, #, or .
         "([%w-_\\]+)" ..      -- name = 1 or more alfanumeric chars (+ hyphen, reverse slash and uderscore)
         "([|%*~%$!%^]?=?)" .. -- eq = a possible |=, *=, ~=, $=, !=, ^=, or =
         "(['\"]?)",           -- quote = a ' or " delimiting a possible attribute value
         pos + 1
       )
       if not name then break end
-      if ":" == type then
+	repeat
+      if ":" == stype then
         filter = name
-        goto nextname
+        --[[goto nextname]] break
       end
       if ")" == switch then
         filter = nil
       end
-      if "[" == type and "" ~= quote then
+      if "[" == stype and "" ~= quote then
         local value
         start, pos, value = string.find(part, "(%b" .. quote .. quote .. ")]", pos)
         name = name .. eq .. value
       end
-      local matched = match(type, name)
+      local matched = match(stype, name)
       if filter == "not" then
         excludes = excludes + matched
       else
         resultset = resultset * matched
       end
-      ::nextname::
+      --::nextname::
+	break
+	until true
     end
     resultset = resultset - excludes
     subjects = Set:new(resultset)
-    ::nextpart::
+    --::nextpart::
+break
+until true
   end
   resultset = resultset:tolist()
   table.sort(resultset, function (a, b) return a.index < b.index end)
