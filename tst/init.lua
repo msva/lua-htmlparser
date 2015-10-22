@@ -277,3 +277,14 @@ function test_order()
     assert_equal(i, tonumber(v.name), "notn order")
   end
 end
+
+function test_tagnames_with_hyphens()
+	local tree = htmlparser.parse([[
+		<tag-name id="9999">
+			<m id="10000"></m>
+		</tag-name>
+	]])
+	assert_equal(1, #tree.nodes, "top level")
+	assert_equal("tag-name", tree("#9999")[1].name, "#9999")
+	assert_equal("m", tree("#10000")[1].name, "#10000")
+end

@@ -12,7 +12,7 @@ local function parse(text)
     local openstart, name
     openstart, tpos, name = string.find(root._text, 
       "<" ..     -- an uncaptured starting "<"
-      "(%w+)" .. -- name = the first word, directly following the "<"
+      "([%w-]+)" .. -- name = the first word, directly following the "<"
       "[^>]*>",  -- include, but not capture everything up to the next ">"
     tpos)
     if not name then break end
@@ -51,7 +51,7 @@ local function parse(text)
     local closeend = tpos
     while true do
       local closestart, closing, closename
-      closestart, closeend, closing, closename = string.find(root._text, "[^<]*<(/?)(%w+)", closeend)
+      closestart, closeend, closing, closename = string.find(root._text, "[^<]*<(/?)([%w-]+)", closeend)
       if not closing or closing == "" then break end
       tag = table.remove(opentags[closename] or {}) or tag -- kludges for the cases of closing void or non-opened tags
       closestart = string.find(root._text, "<", closestart)
