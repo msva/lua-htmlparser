@@ -1,5 +1,4 @@
 -- vim: ft=lua ts=2
-pcall(require, "luarocks.loader")
 local Set = {}
 Set.mt = {__index = Set}
 function Set:new(values)

@@ -1,4 +1,3 @@
-require("luarocks.loader")
 -- Omit next line in actual module clients; it's only to support development of the module itself
 package.path = "../src/?.lua;" .. package.path
 
