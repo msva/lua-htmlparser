@@ -1,7 +1,7 @@
 package = "htmlparser"
 version = "0.3.2-2"
 source = {
-  url = "git://github.com/wscherphof/lua-htmlparser.git",
+  url = "https://github.com/msva/lua-htmlparser",
   branch = "v0.3.2"
 }
 description = {
@@ -9,7 +9,7 @@ description = {
   detailed = [[
     Call parse() to build up a tree of element nodes. Each node in the tree, including the root node that is returned by parse(), supports a basic set of jQuery-like selectors. Or you could walk the tree by hand.
   ]],
-  homepage = "http://wscherphof.github.io/lua-htmlparser/",
+  homepage = "http://msva.github.io/lua-htmlparser/",
   license = "LGPL+"
 }
 dependencies = {

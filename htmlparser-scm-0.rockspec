@@ -1,7 +1,7 @@
 package = "htmlparser"
 version = "scm-0"
 source = {
-  url = "git://github.com/wscherphof/lua-htmlparser.git",
+  url = "https://github.com/msva/lua-htmlparser",
   branch = "master"
 }
 description = {
