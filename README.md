@@ -2,25 +2,27 @@
 
 Parse HTML text into a tree of elements with selectors
 
-[1]: http://wscherphof.github.com/lua-set/
-[2]: http://api.jquery.com/category/selectors/
+[1]: https://api.jquery.com/category/selectors/
 
 ## Install
 Htmlparser is a listed [LuaRock](http://luarocks.org/repositories/rocks/). Install using [LuaRocks](http://www.luarocks.org/): `luarocks install htmlparser`
 
 ### Dependencies
-Htmlparser depends on [Lua 5.2](http://www.lua.org/download.html) (while work with LuaJIT, which provides 5.1-compatible ABI), and on the ["lua-set"][1] package, which is installed along automatically. To be able to run the tests, [lunitx](https://github.com/dcurrie/lunit) also comes along as a LuaRock
+Htmlparser depends on [Lua 5.1-5.3](https://www.lua.org/download.html) or [LuaJIT](https://luajit.org/download.html), which provides 5.1-compatible ABI.
+To be able to run the tests, [lunitx](https://github.com/dcurrie/lunit) also comes along as a LuaRock
 
 ## Usage
 Start off with
 ```lua
-pcall(require, "luarocks.loader")
 local htmlparser = require("htmlparser")
 ```
 Then, parse some html:
 ```lua
 local root = htmlparser.parse(htmlstring)
 ```
+Optionally, you can pass loop-limit value (integer). This value means the deepness of the tree, after which parser will give up. Default value is 1000.
+Also, global variable `htmlparser_looplimit` is supported (while this optional argument takes priority over global value)
+
 The input to parse may be the contents of a complete html document, or any valid html snippet, as long as all tags are correctly opened and closed.
 Now, find specific contained elements by selecting:
 ```lua
@@ -43,7 +45,7 @@ end
 The root element is a container for the top level elements in the parsed text, i.e. the `<html>` element in a parsed html document would be a child of the returned root element.
 
 ## Selectors
-Supported selectors are a subset of [jQuery's selectors][2]:
+Supported selectors are a subset of [jQuery's selectors][1]:
 
 - `"*"` all contained elements
 - `"element"` elements with the given tagname
