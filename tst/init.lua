@@ -287,3 +287,10 @@ function test_tagnames_with_hyphens()
 	assert_equal("tag-name", tree("#9999")[1].name, "#9999")
 	assert_equal("m", tree("#10000")[1].name, "#10000")
 end
+
+function test_loop_limit()
+	local tree = htmlparser.parse([[
+		<div data-pic="aa<%=image_url%>bb" ></div>
+	]]) -- issue#42
+	assert(1==1)
+end
