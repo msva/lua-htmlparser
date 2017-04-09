@@ -28,10 +28,8 @@ install:
   - luarocks make rockspecs/htmlparser-scm-0.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
 
 script:
-#  - cd tst
   - lua -e "print(require'cURL'.version())"
-#  - lunit.sh init.lua
-  - lua -l tst -e ""
+  - lua -l tst.init -e ""
 
 after_success:
   - coveralls -b .. -r .. -i ./src --dump c.report.json
