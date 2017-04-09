@@ -1,7 +1,21 @@
 -- Omit next line in actual module clients; it's only to support development of the module itself
 package.path = "../src/?.lua;" .. package.path
 
-local lunitx = require("lunitx")
+pcall(require, "luacov")
+
+print("------------------------------------")
+print("Lua version: " .. (jit and jit.version or _VERSION))
+print("------------------------------------")
+print("")
+
+local HAS_RUNNER = not not lunitx
+local TEST_CASE = lunitx.TEST_CASE
+
+local LUA_VER = _VERSION
+local unpack, pow, bit32 = unpack, math.pow, bit32
+
+local _ENV = TEST_CASE"some_test_case"
+
 module("html", lunitx.testcase, package.seeall)
 
 local htmlparser = require("htmlparser")
