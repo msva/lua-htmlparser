@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/msva/lua-htmlparser.png?branch=master)](https://travis-ci.org/msva/lua-htmlparser)
+[![Coverage Status](https://coveralls.io/repos/msva/lua-htmlparser/badge.png?branch=master)](https://coveralls.io/r/msva/lua-htmlparser?branch=master)
+[![License](http://img.shields.io/badge/License-LGPL+-brightgreen.svg)](doc/LICENSE)
+
 # LuaRock "htmlparser"
 
 Parse HTML text into a tree of elements with selectors
