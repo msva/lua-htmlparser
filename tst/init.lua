@@ -9,6 +9,7 @@ print("------------------------------------")
 print("")
 
 local HAS_RUNNER = not not lunitx
+local lunitx = require("lunitx")
 local TEST_CASE = lunitx.TEST_CASE
 
 local LUA_VER = _VERSION
