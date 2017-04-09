@@ -8,16 +8,19 @@ print("Lua version: " .. (jit and jit.version or _VERSION))
 print("------------------------------------")
 print("")
 
-local HAS_RUNNER = not not lunitx
-local lunitx = require("lunitx")
+local HAS_RUNNER = not not lunit
+local lunitx
+if not HAS_RUNNER then
+	lunitx = require"lunitx"
+else
+	lunitx = require"lunit"
+end
 local TEST_CASE = lunitx.TEST_CASE
 
 local LUA_VER = _VERSION
 local unpack, pow, bit32 = unpack, math.pow, bit32
 
-local _ENV = TEST_CASE"some_test_case"
-
-module("html", lunitx.testcase, package.seeall)
+local _ENV = TEST_CASE"html"
 
 local htmlparser = require("htmlparser")
 
