@@ -13,7 +13,8 @@ description = {
   license = "LGPL+"
 }
 dependencies = {
-  "lua >= 5.1"
+  "lua >= 5.1",
+  "lunitx >= 0.6"
 }
 build = {
   type = "builtin",

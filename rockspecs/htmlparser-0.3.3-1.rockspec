@@ -1,8 +1,8 @@
 package = "htmlparser"
-version = "0.3.2-2"
+version = "0.3.3-1"
 source = {
   url = "https://github.com/msva/lua-htmlparser",
-  branch = "v0.3.2"
+  tag = "v0.3.3"
 }
 description = {
   summary = "Parse HTML text into a tree of elements with selectors",
@@ -14,7 +14,6 @@ description = {
 }
 dependencies = {
   "lua >= 5.1",
-  "set >= 0.2.1-2",
   "lunitx >= 0.6"
 }
 build = {
