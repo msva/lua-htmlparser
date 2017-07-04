@@ -47,7 +47,7 @@ local function parse(text)
 			break
 		end
 
-		local openstart, name
+		local openstart, name, textcontent
 		openstart, tpos, name = root._text:find(
 			"<" ..        -- an uncaptured starting "<"
 			"([%w-]+)" .. -- name = the first word, directly following the "<"
@@ -108,9 +108,11 @@ local function parse(text)
 		else
 			opentags[tag.name] = opentags[tag.name] or {}
 			table.insert(opentags[tag.name], tag)
+			descend = true
 		end
 
 		local closeend = tpos
+		local textend  = tpos
 		local closingloop
 		while true do
 			if closingloop == limit then
@@ -120,6 +122,22 @@ local function parse(text)
 
 			local closestart, closing, closename
 			closestart, closeend, closing, closename = root._text:find("[^<]*<(/?)([%w-]+)", closeend)
+
+			-- Feature: Wrap a text node in to current or parent node
+			-- 新特征: 封装一个纯文本到一个当前或者父节点里
+			-- TODO: &nbsp;... et. not handle yet, create a ElementNode function to handle them?
+			-- TODO: 一些特殊字符还没有处理, 考虑创建一个ElementNode实例方法处理特殊字符?
+			do
+				local textstart
+				textstart , textend, textcontent = root._text:find(">([^<]*)", closestart)
+				textcontent = string.gsub(textcontent, "[\r\n%s]*", '')
+				textcontent = string.gsub(textcontent, "&nbsp;", '')
+				if textcontent ~= '' then
+					index = index + 1
+					local textTag = ElementNode:new(index, 'text', node, descend, textstart+1, textend)
+					textTag:close()
+				end
+			end
 
 			if not closing or closing == "" then break end
 
