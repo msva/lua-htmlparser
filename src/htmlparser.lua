@@ -124,9 +124,7 @@ local function parse(text)
 			closestart, closeend, closing, closename = root._text:find("[^<]*<(/?)([%w-]+)", closeend)
 
 			-- Feature: Wrap a text node in to current or parent node
-			-- 新特征: 封装一个纯文本到一个当前或者父节点里
-			-- TODO: &nbsp;... et. not handle yet, create a ElementNode function to handle them?
-			-- TODO: 一些特殊字符还没有处理, 考虑创建一个ElementNode实例方法处理特殊字符?
+			-- TODO: &nbsp; &#914; etc. did not handled yet, create a ElementNode function to handle them?
 			do
 				local textstart
 				textstart , textend, textcontent = root._text:find(">([^<]*)", closestart)

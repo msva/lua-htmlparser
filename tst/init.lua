@@ -288,11 +288,36 @@ function test_order()
   for i,v in pairs(n) do
     assert_equal(i, tonumber(v:getcontent()), "n order")
   end
-  local notn = tree(":not(n)")
+  local notn = tree(":not(n,text)")
   assert_equal(4, #notn, "notn")
   for i,v in pairs(notn) do
     assert_equal(i, tonumber(v.name), "notn order")
   end
+end
+
+function test_wrap_literals_text_to_textnodes()
+	local tree = htmlparser.parse([[
+	<1>
+		<n>1</n>
+		<2>
+		<n>2</n>
+		<n>3</n>
+			<3>
+				<n>4</n>
+				<n>5</n>
+				<n>6</n>
+				<4>
+					<n>7</n>
+					<n>8</n>
+					<n>9</n>
+					<n>10</n>
+				</4>
+			</3>
+		</2>
+	</1>
+	]])
+	local texts = tree("text")
+	assert_equal(10, #texts, "texts")
 end
 
 function test_tagnames_with_hyphens()
