@@ -22,7 +22,7 @@ local tpl_rep={
 local tpl_rep_rev = {}
 
 
-local function parse(text)
+local function parse(text,limit)
 	local text=str(text)
 
 	local limit = limit or htmlparser_looplimit or 1000
