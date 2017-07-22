@@ -1,3 +1,4 @@
+-- vim: ft=lua ts=2 sw=2
 -- Omit next line in actual module clients; it's only to support development of the module itself
 package.path = "../src/?.lua;" .. package.path
 
@@ -308,6 +309,19 @@ end
 
 function test_loop_limit()
 	local tree = htmlparser.parse([[
+		<a id='1>2'>moo</a>
+		<a id='2>3'>moo</a>
+		<b id='foo<bar'>moo</b>
+		<img <%tpl%> foo=bar></img>
+		<img <%tpl%> />
+		<img <%tpl%>></img>
+		<img <%tpl%>/>
+		<i <=moo=>>k</i>
+		<s <-foo->>o</s>
+		<div <*bar*>></div>
+		<p>
+			<a id="unclosed>Element"> with unclosed attribute</a>
+		</p>
 		<div data-pic="aa<%=image_url%>bb" ></div>
 	]]) -- issue#42
 	assert(1==1)

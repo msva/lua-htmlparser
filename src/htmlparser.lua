@@ -1,4 +1,4 @@
--- vim: ft=lua ts=2
+-- vim: ft=lua ts=2 sw=2
 
 local esc = function(s) return string.gsub(s, "([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%" .. "%1") end
 local str = tostring
@@ -11,16 +11,13 @@ local voidelements = require("htmlparser.voidelements")
 
 local HtmlParser = {}
 
-local tpl_rep={
-	-- Replace table for template engines syntax that can confuse us.
+local tpr = {
 	-- Here we're replacing confusing sequences
 	-- (things looking like tags, but appearing where tags can't)
 	-- with definitelly invalid utf sequence, and later we'll replace them back
-	["<%"] = char(208,209),
-	["%>"] = char(209,208),
+	["<"] = char(208,209,208,209),
+	[">"] = char(209,208,209,208),
 }
-local tpl_rep_rev = {}
-
 
 local function parse(text,limit)
 	local text=str(text)
@@ -28,14 +25,37 @@ local function parse(text,limit)
 	local limit = limit or htmlparser_looplimit or 1000
 
 	local tpl = false
-	for k,v in pairs(tpl_rep) do
-		local mtc="("..esc(k)..")"
-		if text:match(mtc) then
-			tpl=true
-			text=text:gsub(mtc,tpl_rep)
-			tpl_rep_rev[v]=k;
-		end
+
+	local function g(id,...)
+		local arg={...}
+		arg[id]=tpr[arg[id]]
+		tpl=true
+		return table.concat(arg)
 	end
+
+	text = text
+		:gsub(
+			"(<)"..
+			"([^>]-)"..
+			"(<)",
+			function(...)return g(3,...)end
+		):gsub(
+			"("..tpr["<"]..")"..
+			"([^%w%s])"..
+			"([^%2]-)"..
+			"(%2)"..
+			"(>)"..
+			"([^>]-)"..
+			"(>)",
+			function(...)return g(5,...)end
+		):gsub(
+			[=[(['"])]=]..
+			[=[([^'>"]-)]=]..
+			"(>)"..
+			[=[([^'>"]-)]=]..
+			[=[(['"])]=],
+			function(...)return g(3,...)end
+		)
 
 	local index = 0
 	local root = ElementNode:new(index, str(text))
@@ -80,7 +100,7 @@ local function parse(text,limit)
 			if not k or k == "/>" or k == ">" then break end
 
 			if eq == "=" then
-				local pattern = "=([^%s>]*)"
+				pattern = "=([^%s>]*)"
 				if quote ~= "" then
 					pattern = quote .. "([^" .. quote .. "]*)" .. quote
 				end
@@ -90,11 +110,8 @@ local function parse(text,limit)
 			v=v or ""
 
 			if tpl then
-				for rk,rv in pairs(tpl_rep_rev) do
-					local mtc="("..esc(rk)..")"
-					if text:match(mtc) then
-						v = v:gsub(mtc,tpl_rep_rev)
-					end
+				for rk,rv in pairs(tpr) do
+						v = v:gsub(rv,rk)
 				end
 			end
 
@@ -133,11 +150,8 @@ local function parse(text,limit)
 	end
 
 	if tpl then
-		for k,v in pairs(tpl_rep_rev) do
-			local mtc="("..esc(k)..")"
-			if text:match(mtc) then
-				root._text = root._text:gsub(mtc,tpl_rep_rev)
-			end
+		for k,v in pairs(tpr) do
+			root._text = root._text:gsub(v,k)
 		end
 	end
 
