@@ -50,9 +50,9 @@ local function parse(text,limit)
 			function(...)return g(5,...)end
 		):gsub(
 			[=[(['"])]=]..
-			[=[([^'>"]-)]=]..
+			[=[([^'">%s]-)]=]..
 			"(>)"..
-			[=[([^'>"]-)]=]..
+			[=[([^'">%s]-)]=]..
 			[=[(['"])]=],
 			function(...)return g(3,...)end
 		)
