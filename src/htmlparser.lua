@@ -2,6 +2,7 @@
 
 local esc = function(s) return string.gsub(s, "([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%" .. "%1") end
 local str = tostring
+local num = tonumber
 local char = string.char
 local err = function(s) io.stderr:write(s) end
 local out = function(s) io.stdout:write(s) end
@@ -10,6 +11,7 @@ local ElementNode = require("htmlparser.ElementNode")
 local voidelements = require("htmlparser.voidelements")
 
 local HtmlParser = {}
+HtmlParser.looplimit = false
 
 local tpr = {
 	-- Here we're replacing confusing sequences
@@ -22,7 +24,15 @@ local tpr = {
 local function parse(text,limit)
 	local text=str(text)
 
-	local limit = limit or htmlparser_looplimit or 1000
+	local limit = num(limit) or false
+	if not limit then
+		if htmlparser_looplimit and not HtmlParser.looplimit then
+			err("[HTMLParser] [WARN] Global flag htmlparser_looplimit will be moved to HtmlParser scope in next releases and won't work. Please, use HtmlParser.looplimit instead.")
+			limit = num(htmlparser_looplimit)
+		else
+			limit = num(HtmlParser.looplimit) or 1000
+		end
+	end
 
 	local tpl = false
 
@@ -100,7 +110,7 @@ local function parse(text,limit)
 			if not k or k == "/>" or k == ">" then break end
 
 			if eq == "=" then
-				pattern = "=([^%s>]*)"
+				local pattern = "=([^%s>]*)"
 				if quote ~= "" then
 					pattern = quote .. "([^" .. quote .. "]*)" .. quote
 				end
