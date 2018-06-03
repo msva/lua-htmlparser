@@ -1,7 +1,7 @@
 package = "htmlparser"
 version = "scm-0"
 source = {
-  url = "https://github.com/msva/lua-htmlparser",
+  url = "git+https://github.com/msva/lua-htmlparser",
   branch = "master"
 }
 description = {
@@ -14,7 +14,6 @@ description = {
 }
 dependencies = {
   "lua >= 5.1",
-  "lunitx >= 0.6"
 }
 build = {
   type = "builtin",

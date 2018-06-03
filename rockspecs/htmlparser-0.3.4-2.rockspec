@@ -1,7 +1,7 @@
 package = "htmlparser"
-version = "0.3.4-1"
+version = "0.3.4-2"
 source = {
-  url = "https://github.com/msva/lua-htmlparser",
+  url = "git+https://github.com/msva/lua-htmlparser",
   tag = "v0.3.4"
 }
 description = {
@@ -14,7 +14,6 @@ description = {
 }
 dependencies = {
   "lua >= 5.1",
-  "lunitx >= 0.6"
 }
 build = {
   type = "builtin",
