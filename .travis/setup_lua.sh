@@ -23,7 +23,7 @@ mkdir "${HOME}/.lua" -p
 
 LUAJIT="no"
 
-if [ "${LUA:1:6}" == "luajit" ]; then
+if [ "${LUA:0:6}" == "luajit" ]; then
 	LUAJIT="yes"
 	LJ_BRANCH="${LUA##luajit}"
 fi
