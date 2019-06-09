@@ -1,5 +1,7 @@
 #! /bin/bash
 
+# vim: ft=bash sw=2 ts=2
+
 # A script for setting up environment for travis-ci testing.
 # Sets up Lua and Luarocks.
 # LUA must be "lua5.x" or "luajit".
@@ -100,8 +102,6 @@ elif [ "$LUA" == "luajit2.0" ]; then
   export LUA_INCDIR="$LUA_HOME_DIR/include/luajit-2.0"
 elif [ "$LUA" == "luajit2.1" ]; then
   export LUA_INCDIR="$LUA_HOME_DIR/include/luajit-2.1"
-#else
-#  ./configure --with-lua="$LUA_HOME_DIR" --prefix="$LR_HOME_DIR"
 fi
 
 ./configure --with-lua="$LUA_HOME_DIR" --prefix="$LR_HOME_DIR"
@@ -117,10 +117,6 @@ rm -rf $LUAROCKS_BASE
 
 if [ "$LUAJIT" == "yes" ]; then
   rm -rf $LUAJIT_BASE;
-elif [ "$LUA" == "lua5.1" ]; then
-  rm -rf lua-5.1.5;
-elif [ "$LUA" == "lua5.2" ]; then
-  rm -rf lua-5.2.4;
-elif [ "$LUA" == "lua5.3" ]; then
-  rm -rf lua-5.3.2;
+else
+  rm -rf lua_build;
 fi
