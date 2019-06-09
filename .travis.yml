@@ -9,7 +9,7 @@ env:
     - LUA=lua5.1
     - LUA=lua5.2
     - LUA=lua5.3
-    - LUA=lua5.4
+#    - LUA=lua5.4
     - LUA=luajit     # latest stable version
     - LUA=luajit2.0  # current head of 2.0 branch
     - LUA=luajit2.1  # current head of 2.1 branch
