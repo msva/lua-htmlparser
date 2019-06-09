@@ -104,7 +104,7 @@ elif [ "$LUA" == "luajit2.1" ]; then
 #  ./configure --with-lua="$LUA_HOME_DIR" --prefix="$LR_HOME_DIR"
 fi
 
-./configure --prefix="$LR_HOME_DIR"
+./configure --with-lua="$LUA_HOME_DIR" --prefix="$LR_HOME_DIR"
 make build && make install
 
 ln -s $LR_HOME_DIR/bin/luarocks $HOME/.lua/luarocks
