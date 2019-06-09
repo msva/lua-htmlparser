@@ -109,40 +109,36 @@ local function parse(text,limit) -- {{{
 		end
 		-- g }}}
 
-		-- templaters {{{
-		text=text:gsub(
-				[=[(=[%s]-)(['"])]=].. -- only match attr.values, and not random strings between two random quoting marks
-				[=[([^%2<>]+)]=]..
-				[=[([^%2>]-)]=]..
-				[=[(%2)]=],
-				function(...)return g(4,...)end
-			) -- Escape "<" inside attr.values (see issue #50)
-		text=text:gsub(
-				[=[(=[%s]-)(['"])]=].. -- only match attr.values, and not random strings between two random quoting marks
-				[=[([^%2<>]+)]=]..
-				[=[([^%2<]-)]=]..
-				[=[(%2)]=],
-				function(...)return g(4,...)end
-			) -- Escape ">" inside attr.values (see issue #50)
---[[
-]]
-		text = text:gsub(
-				"(<[^!])".. -- Comments aren't templaters placeholders
-				"([^>]-)"..
+		-- tpl-placeholders and attributes {{{
+		text=text
+			:gsub(
+				"(=[%s]-)".. -- only match attr.values, and not random strings between two random apostrophs
+				"(%b'')",
+				function(...)return g(2,...)end
+			)
+			:gsub(
+				"(=[%s]-)".. -- same for "
+				'(%b"")',
+				function(...)return g(2,...)end
+			) -- Escape "<"/">" inside attr.values (see issue #50)
+			:gsub(
+				"(<".. -- Match "<",
+				(opts.tpl_skip_pattern or "[^!]").. -- with exclusion pattern (for example, to ignore comments, which aren't template placeholders, but can legally contain "<"/">" inside.
+				")([^>]+)".. -- If matched, we want to escape '<'s if we meet them inside tag
 				"(>)",
 				function(...)return g(2,...)end
-		) -- scan for a second "<", inside "<>" (if it shows before ">"), until it inside the comment or CDATA
-		text=text:gsub(
-				"("..tpr["<"]..")"..
-				"([^%w%s])"..
-				"([^%2]-)"..
-				"(%2)"..
-				"(>)"..
-				"([^>]-)"..
-				"(>)", -- Comments and CDATA aren't templaters placeholders
+			)
+			:gsub(
+				"("..
+				(tpr["<"] or "__FAILED__").. -- Here we search for "<", we escaped in previous gsub (and don't break things if we have no escaping replacement)
+				")("..
+				(opts.tpl_marker_pattern or "[^%w%s]").. -- Capture templating symbol
+				")([%g%s]-)".. -- match placeholder's content
+				"(%2)(>)".. -- placeholder's tail
+				"([^>]*>)", -- remainings
 				function(...)return g(5,...)end
-			) -- try to find matching ">" for previous replace
-		-- templaters }}}
+			)
+		-- }}}
 	end -- }}}
 
 	local index = 0

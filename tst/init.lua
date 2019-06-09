@@ -309,8 +309,13 @@ end
 
 function test_loop_limit()
 	local tree = htmlparser.parse([[
+		<a id='a >b'>moo</a>
+		<a id='c> d'>moo</a>
+		<a id='e > f'>moo</a>
+		<a id="g >h">moo</a>
+		<a id="i> j">moo</a>
+		<a id="k > l">moo</a>
 		<a id='1>2'>moo</a>
-		<a id='2>3'>moo</a>
 		<b id='foo<bar'>moo</b>
 		<img <%tpl%> foo=bar></img>
 		<img <%tpl%> />
@@ -319,10 +324,8 @@ function test_loop_limit()
 		<i <=moo=>>k</i>
 		<s <-foo->>o</s>
 		<div <*bar*>></div>
-		<p>
-			<a id="unclosed>Element"> with unclosed attribute</a>
-		</p>
+		<a id="unclosed>Element"> with unclosed attribute</a>
 		<div data-pic="aa<%=image_url%>bb" ></div>
 	]]) -- issue#42
-	assert(1==1)
+	assert(#tree.nodes==17)
 end

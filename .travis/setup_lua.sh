@@ -2,13 +2,13 @@
 
 # A script for setting up environment for travis-ci testing.
 # Sets up Lua and Luarocks.
-# LUA must be "lua5.1", "lua5.2" or "luajit".
+# LUA must be "lua5.x" or "luajit".
 # luajit2.0 - master v2.0
 # luajit2.1 - master v2.1
 
 set -eufo pipefail
 
-LUAJIT_VERSION="2.0.4"
+LUAJIT_VERSION="2.0.5"
 LUAJIT_BASE="LuaJIT-$LUAJIT_VERSION"
 
 source .travis/platform.sh
@@ -62,14 +62,14 @@ else
 
   if [ "$LUA" == "lua5.1" ]; then
     curl http://www.lua.org/ftp/lua-5.1.5.tar.gz | tar xz
-    cd lua-5.1.5;
   elif [ "$LUA" == "lua5.2" ]; then
     curl http://www.lua.org/ftp/lua-5.2.4.tar.gz | tar xz
-    cd lua-5.2.4;
   elif [ "$LUA" == "lua5.3" ]; then
-    curl http://www.lua.org/ftp/lua-5.3.2.tar.gz | tar xz
-    cd lua-5.3.2;
+    curl http://www.lua.org/ftp/lua-5.3.5.tar.gz | tar xz
+  elif [ "$LUA" == "lua5.4" ]; then
+    curl http://www.lua.org/work/lua-5.4.0-alpha-rc2.tar.gz | tar xz
   fi
+  cd lua-5*
 
   # Build Lua without backwards compatibility for testing
   perl -i -pe 's/-DLUA_COMPAT_(ALL|5_2)//' src/Makefile
