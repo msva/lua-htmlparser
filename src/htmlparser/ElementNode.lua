@@ -106,9 +106,9 @@ function ElementNode:new(index, nameortext, node, descend, openstart, openend)
 		table.insert(node.nodes, instance)
 	else
 		instance.root = node.root
-		instance.parent = node.parent
+		instance.parent = node.parent or node --XXX: adds some safety but needs more testing for heisenbugs in corner cases
 		instance.level = node.level
-		table.insert(node.parent.nodes, instance)
+		table.insert((node.parent and node.parent.nodes or node.nodes), instance) --XXX: see above about heisenbugs
 	end
 	return setmetatable(instance, ElementNode.mt)
 end
