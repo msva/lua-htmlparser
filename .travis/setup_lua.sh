@@ -25,7 +25,8 @@ LUAJIT="no"
 
 if [ "${LUA:0:6}" == "luajit" ]; then
 	LUAJIT="yes"
-	LJ_BRANCH="${LUA##luajit}"
+	LJ_V="${LUA##luajit}"
+	[[ -z "${LJ_V}" ]] && LJ_V="2.0"
 fi
 
 mkdir -p "${LUA_HOME_DIR}"
@@ -34,7 +35,7 @@ if [ "${LUAJIT}" == "yes" ]; then
 	if [ "${LUA}" == "luajit" ]; then
 		curl -LSs "https://github.com/LuaJIT/LuaJIT/archive/v${LUAJIT_VERSION}.tar.gz" | tar xz
 	else
-		git clone https://github.com/LuaJIT/LuaJIT.git -b "${LJ_BRANCH}" "${LUAJIT_BASE}"
+		git clone https://github.com/LuaJIT/LuaJIT.git -b "v${LJ_V}" "${LUAJIT_BASE}"
 	fi
 
 	cd "${LUAJIT_BASE}"
