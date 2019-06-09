@@ -40,7 +40,7 @@ mkdir -p "$LUA_HOME_DIR"
 if [ "$LUAJIT" == "yes" ]; then
 
   if [ "$LUA" == "luajit" ]; then
-    curl --location https://github.com/LuaJIT/LuaJIT/archive/v$LUAJIT_VERSION.tar.gz | tar xz;
+    curl -LSs https://github.com/LuaJIT/LuaJIT/archive/v$LUAJIT_VERSION.tar.gz | tar xz;
   else
     git clone https://github.com/LuaJIT/LuaJIT.git $LUAJIT_BASE;
   fi
@@ -95,15 +95,16 @@ curl -LSs https://luarocks.github.io/luarocks/releases/$LUAROCKS_BASE.tar.gz | t
 cd $LUAROCKS_BASE
 
 if [ "$LUA" == "luajit" ]; then
-  ./configure --with-lua-include="$LUA_HOME_DIR/include/luajit-2.0" --prefix="$LR_HOME_DIR";
+  export LUA_INCDIR="$LUA_HOME_DIR/include/luajit-2.0"
 elif [ "$LUA" == "luajit2.0" ]; then
-  ./configure --with-lua-include="$LUA_HOME_DIR/include/luajit-2.0" --prefix="$LR_HOME_DIR";
+  export LUA_INCDIR="$LUA_HOME_DIR/include/luajit-2.0"
 elif [ "$LUA" == "luajit2.1" ]; then
-  ./configure --with-lua-include="$LUA_HOME_DIR/include/luajit-2.1" --prefix="$LR_HOME_DIR";
-else
-  ./configure --with-lua="$LUA_HOME_DIR" --prefix="$LR_HOME_DIR"
+  export LUA_INCDIR="$LUA_HOME_DIR/include/luajit-2.1"
+#else
+#  ./configure --with-lua="$LUA_HOME_DIR" --prefix="$LR_HOME_DIR"
 fi
 
+./configure --prefix="$LR_HOME_DIR"
 make build && make install
 
 ln -s $LR_HOME_DIR/bin/luarocks $HOME/.lua/luarocks
