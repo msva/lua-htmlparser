@@ -32,16 +32,16 @@ mkdir -p "${LUA_HOME_DIR}"
 
 if [ "${LUAJIT}" == "yes" ]; then
 	if [ "${LUA}" == "luajit" ]; then
-	  curl -LSs "https://github.com/LuaJIT/LuaJIT/archive/v${LUAJIT_VERSION}.tar.gz" | tar xz
+		curl -LSs "https://github.com/LuaJIT/LuaJIT/archive/v${LUAJIT_VERSION}.tar.gz" | tar xz
 	else
-	  git clone https://github.com/LuaJIT/LuaJIT.git -b "${LJ_BRANCH}" "${LUAJIT_BASE}"
+		git clone https://github.com/LuaJIT/LuaJIT.git -b "${LJ_BRANCH}" "${LUAJIT_BASE}"
 	fi
 
 	cd "${LUAJIT_BASE}"
 
 	if [ "${LUA}" == "luajit2.1" ]; then
-	  # force the INSTALL_TNAME to be luajit
-	  perl -i -pe 's/INSTALL_TNAME=.+/INSTALL_TNAME= luajit/' Makefile
+		# force the INSTALL_TNAME to be luajit
+		perl -i -pe 's/INSTALL_TNAME=.+/INSTALL_TNAME= luajit/' Makefile
 	fi
 
 	make && make install PREFIX="${LUA_HOME_DIR}"
@@ -50,13 +50,13 @@ if [ "${LUAJIT}" == "yes" ]; then
 	ln -s "${LUA_HOME_DIR}/bin/luajit" "${HOME}/.lua/lua"
 else
 	if [ "${LUA}" == "lua5.1" ]; then
-	  suff="ftp/lua-5.1.5.tar.gz"
+		suff="ftp/lua-5.1.5.tar.gz"
 	elif [ "${LUA}" == "lua5.2" ]; then
-	  suff="ftp/lua-5.2.4.tar.gz"
+		suff="ftp/lua-5.2.4.tar.gz"
 	elif [ "${LUA}" == "lua5.3" ]; then
-	  suff="ftp/lua-5.3.5.tar.gz"
+		suff="ftp/lua-5.3.5.tar.gz"
 	elif [ "${LUA}" == "lua5.4" ]; then
-	  suff="work/lua-5.4.0-alpha-rc2.tar.gz"
+		suff="work/lua-5.4.0-alpha-rc2.tar.gz"
 	fi
 
 	mkdir lua_build -p
