@@ -41,7 +41,7 @@ local function parse(text,limit) -- {{{
 	local tpl = false
 
 	if not opts.keep_comments then -- Strip (or not) comments {{{
-		text = text:gsub("<!--.--->","") -- Many chances commented code will have syntax errors, that'll lead to parser failures
+		text = text:gsub("<!%-%-.-%-%->","") -- Many chances commented code will have syntax errors, that'll lead to parser failures
 	end -- }}}
 
 	local tpr={}
