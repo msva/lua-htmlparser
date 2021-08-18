@@ -25,7 +25,7 @@ p(root)
 
 print("\nchapters")
 local sel, chapters = root("ol.chapters > li"), {}
-for e in pairs(sel) do
+for _, e in ipairs(sel) do
   table.insert(chapters, e:getcontent())
 end
 -- print
@@ -35,7 +35,7 @@ end
 
 print("\ncontacts")
 local sel, contacts = root("ul.contacts span[class]"), {}
-for e in pairs(sel) do
+for _, e in ipairs(sel) do
   local id = e.parent.parent.id -- li > a > span
   contacts[id] = contacts[id] or {}
   contacts[id][e.classes[1]] = e:getcontent()
@@ -50,7 +50,7 @@ end
 
 print("\nmicrodata")
 local sel, scopes = root("[itemprop]"), {}
-for prop in pairs(sel) do
+for _, prop in ipairs(sel) do
   if prop.attributes["itemscope"] then goto nextprop end
   local descendantscopes, scope = {}, prop
   while true do
