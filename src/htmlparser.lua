@@ -168,6 +168,7 @@ local function parse(text,limit) -- {{{
 		local tagst, apos = tag:gettext(), 1
 		-- }}}
 		while true do -- TagLoop {{{
+			dbg("[TagLoop]:#LINE# tag.name=%s, tagloop=%s",str(tag.name),str(tagloop))
 			if tagloop == limit then -- {{{
 				err("Tag parsing loop reached loop limit (%d). Consider either increasing it or checking HTML-code for syntax errors", limit)
 				break
@@ -212,6 +213,7 @@ local function parse(text,limit) -- {{{
 			descend = false
 			tag:close()
 		else
+			descend = true
 			opentags[tag.name] = opentags[tag.name] or {}
 			table.insert(opentags[tag.name], tag)
 		end
@@ -219,6 +221,7 @@ local function parse(text,limit) -- {{{
 		local closeend = tpos
 		local closingloop
 		while true do -- TagCloseLoop {{{
+			if voidelements[tag.name:lower()] then break end -- already closed
 			if closingloop == limit then
 				err("Tag closing loop reached loop limit (%d). Consider either increasing it or checking HTML-code for syntax errors", limit)
 				break
