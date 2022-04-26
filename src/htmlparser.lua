@@ -221,7 +221,9 @@ local function parse(text,limit) -- {{{
 		local closeend = tpos
 		local closingloop
 		while true do -- TagCloseLoop {{{
-			if voidelements[tag.name:lower()] then break end -- already closed
+			-- Can't remember why did I add that, so comment it for now (and not remove), in case it will be needed again
+			-- (although, it causes #59 and #60, so it will anyway be needed to rework)
+			-- if voidelements[tag.name:lower()] then break end -- already closed
 			if closingloop == limit then
 				err("Tag closing loop reached loop limit (%d). Consider either increasing it or checking HTML-code for syntax errors", limit)
 				break
