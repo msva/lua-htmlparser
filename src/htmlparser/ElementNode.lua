@@ -64,14 +64,25 @@ end
 
 -- String representation
 Set.mt.__tostring = function (set)
-	local s = "{"
-	local sep = ""
+	local list = {"{"}
 	for k in pairs(set) do
-		s = s .. sep .. tostring(k)
-		sep = ", "
+		list[#list + 1] = tostring(k)
+		list[#list + 1] = ", " -- <= Theoretically, it should't be a problem because of string buffering.
+					-- Especially, as it allows to avoid string concatenation at all, and also allows to 
+					-- avoid things like [1]
+					-- it looks like good idea to add separators this way.
+					-- But it needs to be tested on real-world examples with giant inputs.
+					-- If any (if it'd show that string buffering fails, and it is still leads huge RAM usage),
+					-- it can be downgraded to [1] or even string.format
+					--
+					-- [1] = something like table.concat{"{",table.concat(list,","),"}"},
+					--
 	end
-	return s .. "}"
+	list[#list] = "}"
+
+	return table.concat(list)
 end
+
 
 
 local ElementNode = {}
